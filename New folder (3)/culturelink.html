@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CultureLink</title>
+<style>
+:root{--bg:#faf7ef;--fg:#2a1f14;--card:#fffdf8;--jade:#0E8574;--ver:#E8503A;--gold:#F2B705;--mut:#7a6a55;--bd:#e8d8b8;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root[data-theme="dark"]{--bg:#1a110a;--fg:#f4ece0;--card:#251a10;--jade:#17917c;--mut:#b8a898;--bd:#3d2d1a;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 Inter,"Noto Sans SC",system-ui,sans-serif;padding-bottom:70px}
+h1,h2,h3,.serif{font-family:"Playfair Display","Noto Serif SC",Georgia,serif;margin:0 0 .4em}
+button,select,input,textarea{font:inherit;color:inherit}
+.btn{background:var(--jade);color:#fff;border:0;border-radius:10px;padding:.6em 1.1em;cursor:pointer;font-weight:600}
+.btn.alt{background:transparent;color:var(--fg);border:1.5px solid var(--jade)}
+.btn.ver{background:var(--ver)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+header{position:sticky;top:0;z-index:5;background:var(--jade);color:#faf7ef;display:flex;align-items:center;gap:14px;padding:10px 16px;padding-top:calc(10px + env(safe-area-inset-top,0px));margin-top:calc(-1*env(safe-area-inset-top,0px))}
+.logo{display:flex;align-items:center;gap:8px;color:inherit;text-decoration:none;font-family:"Playfair Display",Georgia,serif;font-size:1.25rem;font-weight:700}
+nav.top{display:flex;gap:4px;margin-left:auto}
+nav a{color:inherit;text-decoration:none;padding:6px 10px;border-radius:8px;font-size:.92rem}
+nav a.on{background:rgba(255,255,255,.18)}
+header select{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.4);border-radius:8px;padding:4px 6px;color:#fff}
+header select option{color:#000}
+nav.bot{display:none}
+@media(max-width:760px){nav.top{display:none}header select{margin-left:auto}nav.bot{display:flex;position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--bd);padding-bottom:env(safe-area-inset-bottom,0px);z-index:5}nav.bot a{flex:1;text-align:center;padding:8px 2px;font-size:.72rem;color:var(--fg);text-decoration:none}nav.bot a span{display:block;font-size:1.2rem}nav.bot a.on{color:var(--ver);font-weight:700}}
+main{max-width:1000px;margin:0 auto;padding:20px 16px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+.hero{text-align:center;padding:40px 0 20px}
+.hero h1{font-size:clamp(2rem,6vw,3.4rem);color:var(--jade)}
+.pp{background:linear-gradient(135deg,#0E8574,#0a6b5e);color:#faf7ef;border-radius:16px;padding:22px;border:3px solid var(--gold);box-shadow:0 10px 30px rgba(0,0,0,.25);display:flex;gap:16px;align-items:center;flex-wrap:wrap;max-width:560px;margin:auto}
+.av{width:64px;height:64px;border-radius:50%;background:var(--gold);display:grid;place-items:center;font-size:2rem;flex:none}
+.stamp{position:relative;text-align:center;cursor:pointer;background:var(--card);border:2px dashed var(--bd);border-radius:14px;padding:14px 8px;width:100%}
+.stamp .em{font-size:2.4rem}
+.stamp.locked .em{filter:grayscale(1) blur(2px);opacity:.5}
+.stamp.visited{border:2px solid var(--ver);border-style:solid;transform:rotate(-1.5deg)}
+.stamp.mastered{border:3px solid var(--gold);box-shadow:0 0 0 3px rgba(201,162,39,.3)}
+.bar{height:10px;background:var(--bd);border-radius:9px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--gold)}
+.tag{display:inline-block;font-size:.75rem;border-radius:20px;padding:2px 9px;background:var(--bd);margin:2px 2px 0 0}
+.tag.g{background:var(--jade);color:#fff}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:20;display:grid;place-items:center;padding:14px}
+.md{background:var(--bg);border-radius:16px;max-width:480px;width:100%;max-height:90vh;overflow:auto;padding:20px;border:2px solid var(--gold)}
+.note{font-size:.8rem;color:var(--mut)}
+input,select,textarea{width:100%;padding:.55em .7em;border:1px solid var(--bd);border-radius:9px;background:var(--card);margin:3px 0 10px}
+.tabs{display:flex;gap:8px;margin:12px 0;flex-wrap:wrap}
+.tabs button{border:1.5px solid var(--jade);background:none;border-radius:20px;padding:.3em 1em;cursor:pointer}
+.tabs button.on{background:var(--jade);color:#fff}
+.opt{display:block;width:100%;text-align:left;margin:6px 0;padding:.6em .8em;border:1.5px solid var(--bd);border-radius:10px;background:var(--card);cursor:pointer}
+.opt.ok{border-color:#1b8a4b;background:rgba(27,138,75,.18)}
+.opt.no{border-color:var(--ver);background:rgba(192,57,43,.15)}
+.opt.selected{border-color:var(--jade);box-shadow:0 0 0 2px rgba(27,138,75,.14)}
+.tree-result.ok{color:#1b8a4b;font-weight:700}.tree-result.no{color:var(--ver);font-weight:700}
+.view{aspect-ratio:4/3;border:3px solid var(--gold);border-radius:12px;display:grid;place-items:center;font-size:3.5rem;background:repeating-linear-gradient(45deg,#1d2b24,#1d2b24 10px,#22342b 10px,#22342b 20px);color:#fff;position:relative;overflow:hidden}
+.view img{width:100%;height:100%;object-fit:cover;display:block}
+.thunk{animation:thunk .6s cubic-bezier(.2,1.6,.4,1)}
+@keyframes thunk{from{transform:scale(3) rotate(-20deg);opacity:0}to{transform:scale(1) rotate(-8deg);opacity:1}}
+.spin{width:36px;height:36px;border:4px solid var(--bd);border-top-color:var(--jade);border-radius:50%;animation:s 1s linear infinite;margin:20px auto}
+@keyframes s{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+.book{max-width:400px;margin:0 auto}
+.sw{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;border-radius:8px 16px 16px 8px;box-shadow:0 16px 36px rgba(0,0,0,.35);scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.sw::-webkit-scrollbar{display:none}
+.pg{flex:0 0 100%;scroll-snap-align:start;aspect-ratio:3/4;position:relative;padding:20px 18px 24px 28px;color:#2a2a22;background:repeating-linear-gradient(0deg,rgba(15,81,50,.05) 0 2px,transparent 2px 5px),linear-gradient(90deg,rgba(0,0,0,.2),transparent 8%),#f7f0dd;display:flex;flex-direction:column;overflow:hidden}
+.pg.cv{background:radial-gradient(circle at 50% 40%,#16a58f,#0E8574 60%,#0a6558);color:#F2B705;align-items:center;justify-content:center;text-align:center;cursor:pointer;border:0;font:inherit}
+.pg.cv img{width:96px;height:96px;object-fit:contain;display:block}
+.pg h4{font:700 .78rem "Playfair Display",serif;letter-spacing:.14em;text-transform:uppercase;color:#0E8574;border-bottom:1.5px solid #0E8574;padding-bottom:6px;margin:0 0 10px}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:6px;flex:1}
+.st{background:none;border:0;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;color:#2a2a22;text-align:center;padding:2px;font:inherit}
+.ring{width:min(30vw,104px);aspect-ratio:1;border-radius:50%;border:4px double #E8503A;display:grid;place-items:center;font-size:2.4rem;color:#E8503A;transform:rotate(var(--r,0deg));margin-bottom:4px;mix-blend-mode:multiply;overflow:hidden}
+.ring img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.st.locked .ring{border:2px dashed #b9ad92;filter:grayscale(1);opacity:.55;color:#8a8266}
+.st.mastered .ring{border-color:#F2B705;color:#a07f10;box-shadow:inset 0 0 0 3px rgba(201,162,39,.4)}
+.st small{font-size:.68rem;color:#6b6450;line-height:1.2}
+.pgn{position:absolute;bottom:6px;right:14px;font-size:.7rem;color:#8a8266}
+.fld{font-size:.62rem;color:#6b6450;letter-spacing:.08em;text-transform:uppercase}
+.fv{font:600 1rem "Playfair Display",Georgia,serif;margin-bottom:8px}
+.mrz{font:.72rem/1.3 ui-monospace,monospace;letter-spacing:.06em;color:#333;word-break:break-all;margin-top:auto}
+.dots{display:flex;justify-content:center;gap:8px}
+.dots i{width:9px;height:9px;border-radius:50%;background:var(--bd)}
+.dots i.on{background:var(--ver)}
+.pg.cv.imp{background:radial-gradient(circle at 50% 40%,#2a2a2a,#111 60%,#000);color:#C9A227}
+.trunk{border-left:3px solid var(--jade);margin:10px 0 10px 12px;padding-left:16px}
+.tn{opacity:0;transform:translateY(28px);transition:opacity .7s,transform .7s;margin:14px 0}
+.tn.in{opacity:1;transform:none}
+details.tn{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px}
+summary{cursor:pointer}
+.env{text-align:center;cursor:pointer;width:100%;transition:transform .3s;position:relative;overflow:hidden;padding:0}
+.env .envimg{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;border-radius:12px 12px 0 0;background:var(--bd)}
+.env .envbody{padding:10px 12px 14px}
+.env:hover{transform:rotate(-2deg) scale(1.03)}
+.env::after{content:'';position:absolute;bottom:0;left:0;right:0;height:50%;background:linear-gradient(to bottom,transparent,rgba(242,183,5,.12));pointer-events:none}
+.env-open{animation:envOpen .55s cubic-bezier(.2,1.4,.4,1) forwards}
+@keyframes envOpen{0%{transform:scale(1) rotate(0deg)}30%{transform:scale(1.08) rotate(-3deg)}60%{transform:scale(.97) rotate(1deg)}100%{transform:scale(1) rotate(0deg);opacity:0}}
+.paper{background:repeating-linear-gradient(#fff8d6 0 27px,#e8dca8 27px 28px);color:#2a2a22;padding:14px;border-radius:8px;min-height:100px;white-space:pre-wrap}
+.paper img,.md img{max-width:100%;border-radius:6px;margin:6px 0}
+.banner{width:100%;aspect-ratio:3/1;object-fit:cover;border-radius:14px;display:block;margin-bottom:14px;background:var(--bd)}
+.cardimg{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:10px;display:block;margin-bottom:10px;background:var(--bd)}
+.logo img{display:block;object-fit:contain;border-radius:6px;max-width:100%;height:auto}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='900'%3E%3Cg opacity='.06'%3E%3Cellipse cx='80' cy='120' rx='18' ry='28' fill='%23C0392B'/%3E%3Crect x='76' y='92' width='8' height='12' fill='%23C9A227'/%3E%3Crect x='74' y='148' width='12' height='6' rx='3' fill='%23C0392B'/%3E%3Cline x1='80' y1='154' x2='80' y2='170' stroke='%23C9A227' stroke-width='2'/%3E%3Cellipse cx='520' cy='200' rx='14' ry='22' fill='%23C0392B'/%3E%3Crect x='516' y='178' width='8' height='10' fill='%23C9A227'/%3E%3Crect x='514' y='222' width='12' height='5' rx='2' fill='%23C0392B'/%3E%3Cline x1='520' y1='227' x2='520' y2='240' stroke='%23C9A227' stroke-width='2'/%3E%3Cellipse cx='280' cy='60' rx='16' ry='24' fill='%230E8574'/%3E%3Crect x='276' y='36' width='8' height='10' fill='%23C9A227'/%3E%3Crect x='274' y='84' width='12' height='5' rx='2' fill='%230E8574'/%3E%3Cline x1='280' y1='89' x2='280' y2='102' stroke='%23C9A227' stroke-width='2'/%3E%3Cellipse cx='150' cy='380' rx='20' ry='32' fill='%23C0392B'/%3E%3Crect x='146' y='348' width='8' height='14' fill='%23C9A227'/%3E%3Crect x='144' y='412' width='12' height='7' rx='3' fill='%23C0392B'/%3E%3Cline x1='150' y1='419' x2='150' y2='438' stroke='%23C9A227' stroke-width='2'/%3E%3Cellipse cx='450' cy='500' rx='18' ry='28' fill='%230E8574'/%3E%3Crect x='446' y='472' width='8' height='12' fill='%23C9A227'/%3E%3Crect x='444' y='528' width='12' height='6' rx='3' fill='%230E8574'/%3E%3Cline x1='450' y1='534' x2='450' y2='552' stroke='%23C9A227' stroke-width='2'/%3E%3Cellipse cx='60' cy='650' rx='16' ry='26' fill='%23C0392B'/%3E%3Crect x='56' y='624' width='8' height='12' fill='%23C9A227'/%3E%3Crect x='54' y='676' width='12' height='6' rx='3' fill='%23C0392B'/%3E%3Cline x1='60' y1='682' x2='60' y2='698' stroke='%23C9A227' stroke-width='2'/%3E%3Cellipse cx='540' cy='780' rx='14' ry='22' fill='%230E8574'/%3E%3Crect x='536' y='758' width='8' height='10' fill='%23C9A227'/%3E%3Crect x='534' y='802' width='12' height='5' rx='2' fill='%230E8574'/%3E%3Cline x1='540' y1='807' x2='540' y2='820' stroke='%23C9A227' stroke-width='2'/%3E%3C/g%3E%3C/svg%3E") repeat}
+main{position:relative;z-index:1}
+.thm{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);border-radius:20px;padding:4px 10px;color:#fff;cursor:pointer;font-size:.85rem}
+[data-theme="dark"] .thm-icon::before{content:"☀️"}
+:not([data-theme="dark"]) .thm-icon::before{content:"🌙"}
+footer{text-align:center;font-size:.78rem;color:var(--mut);padding:20px 16px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.sp{flex:1}
+
+/* ============================================================
+   CULTURELINK — MODERN VISUAL REFINEMENT
+   Presentation-only overrides: existing routes and behavior stay intact.
+   ============================================================ */
+:root{
+  --bg:#f5f7f4;--fg:#182b27;--card:#ffffff;--jade:#176b5b;
+  --ver:#c65c49;--gold:#d6a943;--mut:#687a73;--bd:#dce6e0;
+  color-scheme:light;
+}
+:root[data-theme="dark"]{
+  --bg:#101b18;--fg:#edf4ef;--card:#192722;--jade:#278b76;
+  --ver:#df7864;--gold:#d6b45f;--mut:#a8bbb1;--bd:#30443b;
+  color-scheme:dark;
+}
+html{scroll-behavior:smooth}
+body{font-family:Inter,"Noto Sans SC",system-ui,sans-serif;line-height:1.6;letter-spacing:.005em}
+body::before{opacity:.28}
+header{background:rgba(23,107,91,.97);backdrop-filter:blur(14px);box-shadow:0 4px 22px rgba(18,48,39,.12);padding-left:clamp(16px,3vw,34px);padding-right:clamp(16px,3vw,34px)}
+.logo{font-size:1.18rem;letter-spacing:-.025em;gap:10px}
+.logo img{border-radius:10px!important}
+nav.top{gap:5px}
+nav a{font-weight:550;transition:background .18s ease,transform .18s ease}
+nav a:hover{background:rgba(255,255,255,.14);transform:translateY(-1px)}
+nav a.on{background:rgba(255,255,255,.2)}
+.thm,header select{backdrop-filter:blur(8px);transition:background .18s ease}
+.thm:hover,header select:hover{background:rgba(255,255,255,.27)}
+main{max-width:1160px;padding:clamp(22px,4vw,42px) clamp(16px,3vw,30px)}
+h1,h2,h3,.serif{letter-spacing:-.025em;line-height:1.2}
+h2{font-size:clamp(1.45rem,3vw,2rem)}
+h3{font-size:1.12rem}
+p{margin-top:.45em}
+.card{border:1px solid var(--bd);border-radius:18px;padding:clamp(16px,2vw,22px);box-shadow:0 5px 20px rgba(27,57,44,.045);transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
+.card:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(27,57,44,.09);border-color:color-mix(in srgb,var(--jade) 35%,var(--bd))}
+.grid{gap:18px;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr))}
+.hero{padding:clamp(34px,6vw,66px) 0 28px}
+.hero>img{filter:drop-shadow(0 8px 14px rgba(23,107,91,.12));margin-bottom:12px}
+.hero h1{max-width:850px;margin:12px auto;color:var(--jade);font-size:clamp(2.1rem,6vw,3.8rem);letter-spacing:-.045em}
+.hero>p{font-size:1.05rem;color:var(--mut);line-height:1.75}
+.btn{border-radius:11px;padding:.68em 1.2em;box-shadow:0 3px 9px rgba(18,65,52,.12);transition:transform .16s ease,filter .16s ease,box-shadow .16s ease}
+.btn:hover:not(:disabled){transform:translateY(-1px);filter:brightness(1.04);box-shadow:0 6px 15px rgba(18,65,52,.16)}
+.btn:active:not(:disabled){transform:translateY(0)}
+.btn.alt{box-shadow:none}
+input,select,textarea{border-radius:11px;padding:.68em .8em;min-height:42px;transition:border-color .18s ease,box-shadow .18s ease}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--jade);box-shadow:0 0 0 3px color-mix(in srgb,var(--jade) 15%,transparent)}
+label{font-weight:600;font-size:.92rem}
+.note{line-height:1.5}
+.tag{padding:3px 10px;font-weight:550}
+.banner,.cardimg,.env .envimg{border-radius:13px}
+.cardimg{margin-bottom:13px}
+.pp{border:1px solid rgba(214,169,67,.75);border-radius:20px;background:linear-gradient(125deg,#176b5b,#124e44);box-shadow:0 12px 28px rgba(18,65,52,.16);padding:22px 24px}
+.av{box-shadow:inset 0 0 0 4px rgba(255,255,255,.2)}
+.stamp{border-radius:16px;transition:transform .18s ease,box-shadow .18s ease}
+.stamp:hover{transform:translateY(-3px);box-shadow:0 8px 18px rgba(27,57,44,.08)}
+.stamp.visited{transform:none;border-color:var(--ver)}
+.stamp.mastered{box-shadow:0 0 0 3px rgba(214,169,67,.18)}
+.tabs button,.opt{transition:background .16s ease,border-color .16s ease,transform .16s ease}
+.tabs button:hover,.opt:hover:not(:disabled){transform:translateY(-1px);border-color:var(--jade)}
+.opt{border-radius:12px;padding:.72em .9em}
+.md{border:1px solid var(--bd);border-radius:20px;box-shadow:0 24px 70px rgba(0,0,0,.24);padding:clamp(18px,4vw,28px)}
+.ov{backdrop-filter:blur(5px)}
+footer{padding:24px 16px 30px;line-height:1.7}
+nav.bot{box-shadow:0 -5px 22px rgba(18,48,39,.08);backdrop-filter:blur(14px);background:color-mix(in srgb,var(--card) 94%,transparent)}
+nav.bot a{font-weight:550;transition:color .15s ease}
+nav.bot a.on{color:var(--jade)}
+.env{border-radius:14px;background:var(--card);border:1px solid var(--bd);box-shadow:0 5px 18px rgba(27,57,44,.05);transition:transform .2s ease,box-shadow .2s ease}
+.env:hover{transform:translateY(-3px);box-shadow:0 12px 24px rgba(27,57,44,.1)}
+@media(max-width:760px){
+  body{padding-bottom:calc(68px + env(safe-area-inset-bottom,0px))}
+  header{gap:9px;padding-left:13px;padding-right:13px}
+  .logo{font-size:1.08rem}
+  .logo img{width:31px!important;height:31px!important}
+  header select{font-size:.8rem;max-width:112px}
+  .thm{padding:5px 8px}
+  main{padding:20px 14px 28px}
+  .hero{padding:30px 0 20px}
+  .grid{gap:13px;grid-template-columns:repeat(auto-fill,minmax(min(100%,155px),1fr))}
+  .card{border-radius:15px;padding:15px}
+  nav.bot{padding-top:6px;padding-bottom:calc(6px + env(safe-area-inset-bottom,0px))}
+  nav.bot a{font-size:.68rem;line-height:1.3;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  nav.bot a span{font-size:1.12rem;margin-bottom:2px}
+  .pp{padding:17px;border-radius:17px}
+  .ring{width:min(27vw,104px)}
+}
+@media(max-width:390px){
+  nav.bot a{font-size:.61rem}
+  nav.bot a span{font-size:1rem}
+  .grid{grid-template-columns:1fr 1fr}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important}}
+
+
+/* Header spacing refinement: compact language control and clearer logo/navigation separation */
+header .logo{margin-right:clamp(12px,1.8vw,24px)}
+header nav.top{gap:7px}
+header select{font-size:.78rem;padding:3px 5px;min-height:30px;height:30px;width:100px;border-radius:7px}
+@media(max-width:760px){
+  header .logo{margin-right:8px}
+  header select{font-size:.74rem;padding:3px 5px;min-height:29px;height:29px;width:88px;max-width:88px}
+}
+
+</style>
+<meta name="description" content="CultureLink is a playful travel journal for Hong Kong and Macau visitors exploring Jiangsu. Collect stamps, learn the stories and travel together. Launch city: Suzhou.">
+<meta name="theme-color" content="#176b5b">
+<meta property="og:type" content="website">
+<meta property="og:title" content="CultureLink">
+<meta property="og:description" content="Collect stamps. Learn the story. Travel together.">
+<meta property="og:image" content="logo.png">
+<link rel="icon" type="image/png" href="favicon.png">
+<style id="x-ext-style">
+/* ============================================================
+   CULTURELINK — PROFESSIONAL EXTENSIONS (additive only)
+   New sections, pages and footer. Nothing above is modified.
+   ============================================================ */
+a.btn{text-decoration:none;display:inline-block;text-align:center}
+.btn.gold{background:var(--gold);color:#2a1f14}
+.btn.ghost{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.7);box-shadow:none}
+.x-sec{margin:clamp(44px,7vw,80px) 0}
+.x-sec>h2{text-align:center;margin-bottom:.3em}
+.x-eyebrow{display:block;text-align:center;font-size:.76rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ver);margin-bottom:8px}
+.x-lead{text-align:center;max-width:640px;margin:0 auto 28px;color:var(--mut)}
+.x-stats{display:grid;grid-template-columns:repeat(4,1fr);background:var(--card);border:1px solid var(--bd);border-radius:20px;overflow:hidden;box-shadow:0 5px 20px rgba(27,57,44,.045)}
+.x-stat{padding:24px 10px;text-align:center;border-right:1px solid var(--bd)}
+.x-stat:last-child{border-right:0}
+.x-stat b{display:block;font:700 clamp(1.8rem,4vw,2.6rem)/1.1 "Playfair Display","Noto Serif SC",Georgia,serif;color:var(--jade)}
+.x-stat span{font-size:.84rem;color:var(--mut)}
+@media(max-width:640px){.x-stats{grid-template-columns:1fr 1fr}.x-stat:nth-child(2){border-right:0}.x-stat:nth-child(-n+2){border-bottom:1px solid var(--bd)}}
+.x-steps{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));counter-reset:xs}
+.x-step{position:relative;padding-top:32px}
+.x-step::before{counter-increment:xs;content:counter(xs);position:absolute;top:-16px;left:20px;width:34px;height:34px;border-radius:50%;background:var(--jade);color:#fff;display:grid;place-items:center;font-weight:700;box-shadow:0 4px 10px rgba(18,65,52,.22)}
+.x-ic{font-size:1.9rem;line-height:1;margin-bottom:8px}
+.x-band{position:relative;border-radius:22px;overflow:hidden;color:#fff;padding:clamp(28px,6vw,58px);background:#124e44 center/cover no-repeat}
+.x-band::before{content:"";position:absolute;inset:0;background:linear-gradient(100deg,rgba(10,52,44,.94),rgba(10,52,44,.55))}
+.x-band>*{position:relative}
+.x-band h2{color:#fff;text-align:left;margin-bottom:.4em}
+.x-band p{max-width:560px;color:#e6f0ea}
+.x-band .row{margin-top:18px}
+.x-faq details{background:var(--card);border:1px solid var(--bd);border-radius:14px;margin:10px 0;transition:border-color .2s,box-shadow .2s}
+.x-faq summary{padding:15px 18px;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.x-faq summary::-webkit-details-marker{display:none}
+.x-faq summary::after{content:"+";color:var(--jade);font-size:1.4rem;line-height:1;flex:none}
+.x-faq details[open]{border-color:var(--jade);box-shadow:0 6px 18px rgba(27,57,44,.06)}
+.x-faq details[open] summary::after{content:"\2013"}
+.x-faq details p{margin:0;padding:0 18px 16px;color:var(--mut)}
+.x-narrow{max-width:760px;margin-left:auto;margin-right:auto}
+.x-ph{text-align:center;padding:clamp(28px,6vw,58px) 0 6px}
+.x-ph h1{color:var(--jade);font-size:clamp(2rem,5vw,3.2rem);letter-spacing:-.04em;margin-bottom:.25em}
+.x-ph p{max-width:640px;margin:0 auto;color:var(--mut);font-size:1.05rem}
+.x-two{display:grid;gap:22px;grid-template-columns:1.3fr 1fr;align-items:start}
+@media(max-width:760px){.x-two{grid-template-columns:1fr}}
+.x-list{margin:.6em 0 0;padding-left:1.1em}
+.x-list li{margin:.35em 0}
+.x-legal h3{margin-top:1.4em}
+.x-legal p,.x-legal li{color:var(--mut)}
+.x-ok{display:none;margin-top:10px;color:#1b8a4b;font-weight:600}
+.x-ft{display:grid;gap:26px;grid-template-columns:1.5fr repeat(3,1fr);text-align:left;max-width:1160px;margin:0 auto 18px;padding:34px clamp(4px,2vw,18px) 24px;border-bottom:1px solid var(--bd);font-size:.9rem}
+.x-ft .x-brand{display:flex;align-items:center;gap:10px;font:700 1.15rem "Playfair Display",Georgia,serif;color:var(--fg);margin-bottom:8px}
+.x-ft p{color:var(--mut);margin:0;max-width:300px;line-height:1.6}
+.x-ft h4{margin:0 0 8px;font:700 .74rem Inter,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--fg)}
+.x-ft a{display:block;color:var(--mut);text-decoration:none;padding:4px 0}
+.x-ft a:hover{color:var(--jade);text-decoration:underline}
+@media(max-width:700px){.x-ft{grid-template-columns:1fr 1fr}.x-ft>div:first-child{grid-column:1/-1}}
+.x-top{position:fixed;right:16px;bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:6;width:44px;height:44px;border-radius:50%;border:0;background:var(--jade);color:#fff;font-size:1.2rem;cursor:pointer;box-shadow:0 8px 20px rgba(18,65,52,.3);opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity .2s,transform .2s}
+.x-top.show{opacity:1;pointer-events:auto;transform:none}
+@media(max-width:760px){.x-top{bottom:calc(82px + env(safe-area-inset-bottom,0px))}}
+.x-rv{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.x-rv.in{opacity:1;transform:none}
+</style>
+</head>
+<body>
+<header id="hd"></header>
+<main id="app"></main>
+<footer id="ft"></footer>
+<div id="md"></div>
+<script>
+/* ============================================================
+   IMAGE SLOTS
+   ============================================================ */
+const IMG = {
+  logo: "logo.png",
+  loc: [
+    "loc-00-humble-administrator-garden.jpg",
+    "loc-01-lingering-garden.jpg",
+    "loc-02-tiger-hill.jpg",
+    "loc-03-pingjiang-road.jpg",
+    "loc-04-shantang-street.jpg",
+    "loc-05-suzhou-museum.jpg",
+    "loc-06-panmen-gate.jpg",
+    "loc-07-jinji-lake.jpg",
+    "loc-08-master-nets-garden.jpg",
+    "loc-09-tongli-water-town.jpg",
+    "loc-10-yangzhou-slender-west-lake.jpg",
+    "loc-11-nanjing-ming-xiaoling.jpg"
+  ],
+  trips: [
+    "trip-00-suzhou-in-a-day.jpg",
+    "trip-01-gardens-canals.jpg",
+    "trip-02-suzhou-slow.jpg",
+    "trip-03-suzhou-yangzhou.jpg"
+  ],
+  hotels: [
+    "hotel-00-gusu-courtyard.jpg",
+    "hotel-01-lakeview-suites.jpg",
+    "hotel-02-garden-gate.jpg",
+    "hotel-03-canal-house.jpg"
+  ],
+  food: [
+    "food-00-songhe-noodles.jpg",
+    "food-01-canal-tea-house.jpg",
+    "food-02-osmanthus-kitchen.jpg",
+    "food-03-tongli-dumplings.jpg",
+    "food-04-moongate-vegetarian.jpg",
+    "food-05-lakeside-hotpot.jpg"
+  ],
+  letters: [
+    "letter-00-lotus-morning.jpg",
+    "letter-01-kids-boats.jpg",
+    "letter-02-dawn-bridge.jpg"
+  ],
+  capsule: "capsule-bg.jpg",
+  dna:     "dna-bg.jpg",
+  tree:    "tree-bg.jpg",
+  sim:     "sim-bg.jpg",
+  forum:   "forum-bg.jpg",
+  /* Culture tree images */
+  treeCity: {
+    suzhou: "tree-city-suzhou.jpg",
+    yangzhou: "tree-city-yangzhou.jpg",
+    nanjing: "tree-city-nanjing.jpg",
+    wuxi: "loc-07-jinji-lake.jpg"
+  },
+  treeItem: {
+    "nj-xiaoling": "tree-nj-ming-xiaoling.jpg",
+    "nj-qinhuai": "tree-nj-confucius-temple.jpg",
+    "nj-laomendong": "loc-03-pingjiang-road.jpg",
+    "sz-gardens": "tree-sz-humble-garden.jpg",
+    "sz-kunqu": "tree-sz-museum.jpg",
+    "sz-shantang": "tree-sz-shantang.jpg",
+    "wx-huishan": "tree-sz-tongli.jpg",
+    "wx-qingming": "tree-sz-pingjiang.jpg",
+    "wx-yuantouzhu": "loc-07-jinji-lake.jpg",
+    "yz-grand-canal": "tree-sz-museum.jpg",
+    "yz-slender": "tree-yz-slender-lake.jpg",
+    "yz-dongguan": "tree-yz-ge-garden.jpg"
+  }
+};
+
+const LOGO_URL = IMG.logo;
+let AVATAR_URL = '';
+try { AVATAR_URL = localStorage.getItem('cl-avatar') || ''; } catch(e){}
+
+const LG=['en','zh-Hant','zh-Hans'],LN=['English','繁體中文','简体中文'];
+const T={
+  tag:['Collect stamps. Learn the story. Travel together.','集郵、學故事、結伴同遊。','集邮、学故事、结伴同游。'],
+  sub:['A playful travel journal for Hong Kong and Macau visitors exploring Jiangsu. Launch city: Suzhou.','為探索江蘇的香港及澳門旅客而設的遊戲式旅遊日誌。首發城市：蘇州。','为探索江苏的香港及澳门旅客而设的游戏式旅游日志。首发城市：苏州。'],
+  signin:['Sign in','登入','登录'],
+  create:['Create account','建立帳戶','创建账户'],
+  f1:['Collect Stamps','收集印章','收集印章'],
+  f1d:['Check in with a live photo at 10 Suzhou landmarks.','以即時相片在 10 個蘇州地標打卡。','以实时照片在 10 个苏州地标打卡。'],
+  f2:['Take Challenges','挑戰問答','挑战问答'],
+  f2d:['Answer quick quizzes for points and gold stamps.','答小測驗賺積分及金印章。','答小测验赚积分及金印章。'],
+  f3:['Find Companions','尋找旅伴','寻找旅伴'],
+  f3d:['Post your trip on the companion board.','在旅伴板發佈你的行程。','在旅伴板发布你的行程。'],
+  proto:['Prototype — no real authentication.','原型 — 並非真實驗證。','原型 — 并非真实验证。'],
+  name:['Display name','顯示名稱','显示名称'],
+  email:['Email','電郵','电邮'],
+  pw:['Password','密碼','密码'],
+  home:['Home city','居住城市','居住城市'],
+  style:['Travel style','旅遊方式','旅游方式'],
+  solo:['Solo','個人','个人'],
+  family:['Family','家庭','家庭'],
+  both:['Both','兩者','两者'],
+  group:['Group','結伴','结伴'],
+  passport:['Passport','護照','护照'],
+  explore:['Explore','探索','探索'],
+  comp:['Companions','旅伴','旅伴'],
+  rewards:['Rewards','獎勵','奖励'],
+  settings:['Settings','設定','设置'],
+  signout:['Sign out','登出','登出'],
+  pts:['points','積分','积分'],
+  stamps:['Stamps','印章','印章'],
+  all:['All','全部','全部'],
+  visited:['Visited','已到訪','已到访'],
+  locked:['Locked','未解鎖','未解锁'],
+  mastered:['Mastered','精通','精通'],
+  disc:['This is a collectible travel journal, not an official document.','這是可收藏的旅遊日誌，並非官方文件。','这是可收藏的旅游日志，并非官方文件。'],
+  checkin:['Check in','打卡','打卡'],
+  quiz:['Take the quiz','開始問答','开始问答'],
+  close:['Close','關閉','关闭'],
+  hours:['Hours','開放時間','开放时间'],
+  spot:['Best photo spot','最佳拍照位','最佳拍照位'],
+  live:['Live photo required — gallery uploads are disabled.','須即時拍攝 — 不可上載相簿相片。','须实时拍摄 — 不可上传相册照片。'],
+  capture:['Capture','拍攝','拍摄'],
+  near:['Near location','已在地標附近','已在地标附近'],
+  ver:['Photo check-in — verified by our team.','相片打卡 — 由團隊核實。','照片打卡 — 由团队核实。'],
+  submit:['Submit answer','提交答案','提交答案'],
+  treeCorrect:['Correct!','答對了！','答对了！'],
+  treeIncorrect:['Not quite — the correct answer is highlighted.','不太對，正確答案已標示。','不太对，正确答案已标出。'],
+  got:['Stamp collected! +10 points','已獲得印章！+10 積分','已获得印章！+10 积分'],
+  aq:['Questions drafted with AI assistance and pending human verification.','問題由 AI 協助擬訂，有待人手核實。','问题由 AI 协助拟订，有待人工核实。'],
+  nq:['Quiz for this location is coming soon (content pending verification). Try Humble Administrator’s Garden.','此地點的問答即將推出（內容待核實）。請試試拙政園。','此地点的问答即将推出（内容待核实）。请试试拙政园。'],
+  next:['Next','下一題','下一题'],
+  fin:['Finish','完成','完成'],
+  redeem:['Redeem','兌換','兑换'],
+  save:['Save to my trip','加入我的行程','加入我的行程'],
+  saved:['Saved','已儲存','已保存'],
+  post:['Post a trip','發佈行程','发布行程'],
+  interested:['Interested','有興趣','有兴趣'],
+  msg:['Message','訊息','讯息'],
+  safe:['Report and block features coming soon. Meet in public places.','舉報及封鎖功能即將推出。請在公共場所會面。','举报及封锁功能即将推出。请在公共场所会面。'],
+  phys:['Physical rewards coming in a future version.','實體獎勵將於日後版本推出。','实体奖励将于日后版本推出。'],
+  trips:['Trips','行程','行程'],
+  hotels:['Hotels','酒店','酒店'],
+  food:['Restaurants','餐廳','餐厅'],
+  soon:['Coming soon','即將推出','即将推出'],
+  dest:['Destination','目的地','目的地'],
+  dates:['Dates','日期','日期'],
+  message:['Message','留言','留言'],
+  since:['Member since','加入於','加入于'],
+  tier:['Tier','等級','等级'],
+  Explorer:['Explorer','探索者','探索者'],
+  Voyager:['Voyager','航行者','航行者'],
+  Ambassador:['Ambassador','大使','大使'],
+  already:['Already visited','已到訪','已到访'],
+  score:['correct','答對','答对'],
+  save2:['Save changes','儲存更改','保存更改'],
+  badges:['Badges','徽章','徽章'],
+  lang:['Language','語言','语言'],
+  more:['More','更多','更多'],
+  dna_h:['Build my DNA','旅遊基因分析','旅游基因分析'],
+  sim_h:['Cross similarities','文化連結','文化连结'],
+  tree_h:['Culture tree','文化樹','文化树'],
+  forum_h:['Letters','信件','信件'],
+  letters_w:['Write a letter','寫信','写信'],
+  capsule_h:['Time capsule','時間囊','时间囊'],
+  city_sz:['Suzhou','蘇州','苏州'],
+  city_yz:['Yangzhou','揚州','扬州'],
+  city_nj:['Nanjing','南京','南京'],
+  dna_btn:['Build my DNA','建立旅遊基因','建立旅游基因'],
+  flex:['Flexible dates','彈性日期','弹性日期'],
+  moreDesc:['Questionnaire, trip picks and partner search','問卷、行程推薦及旅伴搜尋','问卷、行程推荐及旅伴搜索'],
+  simDesc:['What HK & Macau know, found in Jiangsu','香港及澳門認識的，在江蘇也找得到','香港及澳门认识的，在江苏也找得到'],
+  treeDesc:['Scroll from cities to local food and culture','從城市到飲食文化，滾動探索','从城市到饮食文化，滚动探索'],
+  forumDesc:['Sealed letters and your time capsule','密封信件及時間囊','密封信件及时间囊'],
+  myTrip:['My trip','我的行程','我的行程'],
+  nothingSaved:['Nothing saved yet. Tap “Save to my trip” on a trip below.','尚未儲存。點擊下方行程的「加入我的行程」。','尚未保存。点击下方行程的“加入我的行程”。'],
+  view:['View','查看','查看'],
+  remove:['Remove','移除','移除'],
+  addMore:['Add more about me','增加更多個人資料','增加更多个人资料'],
+  budget:['Budget / night','每晚預算','每晚预算'],
+  mood:['Mood','心情','心情'],
+  days:['Days available','可用天數','可用天数'],
+  tripsForYou:['Trips for you','為你推薦的行程','为你推荐的行程'],
+  stay:['Stay','住宿','住宿'],
+  partners:['Travel partners','旅伴','旅伴'],
+  retake:['Retake','重新測試','重新测试'],
+  save_:['Save','儲存','保存'],
+  seal:['Seal capsule','封存時間囊','封存时间囊'],
+  open:['Open','打開','打开'],
+  comment:['Comment','留言','留言'],
+  noComments:['No comments yet.','暫無留言。','暂无留言。'],
+  writeNote:['Your note','你的留言','你的留言'],
+  place:['Place','地點','地点'],
+  title:['Title','標題','标题'],
+  photos:['Photos','相片','照片'],
+  sealPost:['Seal & post','封存並發佈','封存并发布'],
+  record:['Record audio','錄音','录音'],
+  reRecord:['Re-record','重新錄音','重新录音'],
+  stop:['Stop','停止','停止'],
+  city:['City','城市','城市'],
+  openOn:['Open on','開啟日期','开启日期'],
+  micUnavailable:['Microphone unavailable here. Allow mic access or try on your phone.','此處無法使用麥克風。請允許麥克風權限或用手機嘗試。','此处无法使用麦克风。请允许麦克风权限或用手机尝试。'],
+  sealedLetter:['Tap a sealed letter to open it.','點擊密封信件以打開。','点击密封信件以打开。'],
+  comments:['Comments','留言','留言'],
+  addPhoto:['Add a photo','新增相片','添加照片'],
+  low:['Low','低','低'],
+  mid:['Mid','中','中'],
+  high:['High','高','高'],
+  relax:['Relax','放鬆','放松'],
+  adventure:['Adventure','冒險','冒险'],
+  culture:['Culture','文化','文化'],
+  romantic:['Romantic','浪漫','浪漫'],
+  questionnaire:['Answer 5 quick questions to unlock your picks.','回答 5 條簡短問題以解鎖推薦。','回答 5 个简短问题以解锁推荐。'],
+  profileAccuracy:['Profile accuracy','資料準確度','资料准确度'],
+  youMightLove:['you might also love','你可能也會喜歡','你可能也会喜欢'],
+  ifYouLove:['If you love it at home, try its cousin in Jiangsu. Pairings are drafted with AI and pending verification.','如果你喜歡家鄉的這些，不妨試試江蘇的對應體驗。配對由 AI 擬訂，有待核實。','如果你喜欢家乡的这些，不妨试试江苏的对应体验。配对由 AI 拟订，有待核实。'],
+  scrollDown:['Scroll down. Open each place for food, activities and culture.','向下滾動。打開每個地點以查看美食、活動和文化。','向下滚动。打开每个地点以查看美食、活动和文化。'],
+  treeQuiz:['Tree quiz','文化樹問答','文化树问答'],
+  defaultTheme:['Default theme restored','已恢復預設主題','已恢复默认主题'],
+  blackTheme:['Black passport unlocked!','已解鎖黑色護照！','已解锁黑色护照！'],
+  themeDesc:['Your passport cover is now midnight black, and you earned the welcome badge 👋. Open Passport to see it. Tap Redeem again to switch back.','你的護照封面現為午夜黑，並獲得歡迎徽章 👋。打開護照查看。再次點擊兌換可切換回來。','你的护照封面现为午夜黑，并获得欢迎徽章 👋。打开护照查看。再次点击兑换可切换回来。'],
+  mockCode:['Mock code — redeemable in Jiangsu or HK/Macau.','模擬代碼 — 可於江蘇或港澳兌換。','模拟代码 — 可于江苏或港澳兑换。'],
+  preTrip:['Record what you expect before you go, then seal it until a date after your trip.','出發前記錄你的期望，封存至旅程結束後的日期。','出发前记录你的期望，封存至旅程结束后的日期。'],
+  noNote:['(no written note)','（沒有文字留言）','（没有文字留言）'],
+  audioNote:['Audio is only kept until you reload this prototype.','音訊僅保留至重新載入此原型。','音频仅保留至重新加载此原型。'],
+  light:['Light','淺色','浅色'],
+  dark:['Dark','深色','深色'],
+  comingSoon:['Coming soon','即將推出','即将推出'],
+  prototypeContent:['Prototype content shown in English.','原型內容以英文顯示。','原型内容以英文显示。'],
+  myTripTitle:['My trip','我的行程','我的行程'],
+  journey:['Trip','行程','行程'],
+  sampleTraveller:['Sample Traveller','範例旅客','范例旅客'],
+  hk:['Hong Kong','香港','香港'],
+  macau:['Macau','澳門','澳门'],
+  suzhou:['Suzhou','蘇州','苏州'],
+  suzhouCity:['Suzhou','蘇州','苏州'],
+  allDay:['All day','全日','全日'],
+  closedMon:['Closed Mon','週一休館','周一闭馆'],
+  loginFirst:['Please sign in first','請先登入','请先登录'],
+  langSelect:['Language','語言','语言'],
+  themeToggle:['Toggle theme','切換主題','切换主题'],
+  guide:['Guide','指南','指南'],
+  sourceNote:['Source: Suzhou Tourism Bureau (mock)','資料來源：蘇州市旅遊局（模擬）','资料来源：苏州市旅游局（模拟）'],
+  hello:['Hi! Are you still looking for a travel buddy?','你好！你還在找旅伴嗎？','你好！你还在找旅伴吗？'],
+  yesPublic:['Yes! Let’s meet at a public spot first 😊','是的！我們先在公共場所見面吧 😊','是的！我们先在公共场所见面吧 😊'],
+  night:['night','晚','晚']
+};
+
+const LOC=[
+  ['🌸',['Humble Administrator’s Garden','拙政園','拙政园'],'178 Northeast St, Gusu','07:30–17:30','Lotus pond pavilion'],
+  ['⛰️',['Lingering Garden','留園','留园'],'338 Liuyuan Rd, Gusu','07:30–17:00','Cloud-Capped Peak'],
+  ['🗼',['Tiger Hill','虎丘','虎丘'],'8 Shanmen Inner Rd, Gusu','07:30–17:30','Yunyan Pagoda base'],
+  ['🌉',['Pingjiang Road','平江路','平江路'],'Pingjiang Rd, Gusu','All day','Stone bridge at dawn'],
+  ['🛶',['Shantang Street','山塘街','山塘街'],'Shantang St, Gusu','All day','Canal boat view'],
+  ['🏛️',['Suzhou Museum','蘇州博物館','苏州博物馆'],'204 Northeast St','09:00–17:00 (closed Mon)','Main hall geometry'],
+  ['🚪',['Panmen Gate','盤門','盘门'],'1 Dongda St, Gusu','08:00–17:00','Ruiguang Pagoda from bridge'],
+  ['🌅',['Jinji Lake','金雞湖','金鸡湖'],'SIP district','All day','Lakefront boardwalk'],
+  ['🌙',['Master of the Nets Garden','網師園','网师园'],'11 Kuojiatou Alley','07:30–17:30','Courtyard moon gate'],
+  ['🏘️',['Tongli Water Town','同里古鎮','同里古镇'],'Tongli, Wujiang','08:00–17:00','Three Bridges']
+];
+
+const SRC='Source: Suzhou Tourism Bureau (mock)';
+
+const QZ={0:[
+  [['Which dynasty built the Humble Administrator’s Garden?','拙政園建於哪個朝代？','拙政园建于哪个朝代？'],[['Ming','Tang','Song','Qing'],['明朝','唐朝','宋朝','清朝'],['明朝','唐朝','宋朝','清朝']],0,['It was first built around 1509, in the Ming dynasty.','約建於明朝正德四年（1509年）。','约建于明朝正德四年（1509年）。']],
+  [['In which year were the Classical Gardens of Suzhou first inscribed on the UNESCO World Heritage List?','蘇州古典園林於哪一年首次列入世界遺產？','苏州古典园林于哪一年首次列入世界遗产？'],[['1997','1987','2007','1977'],['1997年','1987年','2007年','1977年'],['1997年','1987年','2007年','1977年']],0,['The first inscription was in 1997.','首次列入是在1997年。','首次列入是在1997年。']],
+  [['Which garden style does it belong to?','它屬於哪種園林風格？','它属于哪种园林风格？'],[['Jiangnan private garden','Imperial palace garden','Tibetan monastery garden','Desert oasis garden'],['江南私家園林','皇家宮苑','藏式寺院園林','沙漠綠洲園林'],['江南私家园林','皇家宫苑','藏式寺院园林','沙漠绿洲园林']],0,['It is a classic Jiangnan (south of the Yangtze) private garden.','它是典型的江南私家園林。','它是典型的江南私家园林。']],
+  [['Which flower is the garden best known for in summer?','這座園林夏天以哪種花聞名？','这座园林夏天以哪种花闻名？'],[['Lotus','Tulip','Lavender','Sunflower'],['荷花','鬱金香','薰衣草','向日葵'],['荷花','郁金香','薰衣草','向日葵']],0,['Its lotus-filled ponds are a summer highlight.','荷塘是夏日亮點。','荷塘是夏日亮点。']],
+  [['Suzhou is in which province?','蘇州位於哪個省份？','苏州位于哪个省份？'],[['Jiangsu','Zhejiang','Anhui','Fujian'],['江蘇','浙江','安徽','福建'],['江苏','浙江','安徽','福建']],0,['Suzhou is a city in Jiangsu province.','蘇州是江蘇省的城市。','苏州是江苏省的城市。']]
+]};
+
+const TRIPS=[
+  [['Suzhou in a Day','蘇州一日遊','苏州一日游'],['1 day','1天','1天'],['Humble Garden · Pingjiang Road · Shantang night boats','拙政園 · 平江路 · 山塘夜船','拙政园 · 平江路 · 山塘夜船'],'solo'],
+  [['Gardens & Canals','園林與運河','园林与运河'],['2 days','2天','2天'],['Lingering Garden · Tiger Hill · Tongli','留園 · 虎丘 · 同里','留园 · 虎丘 · 同里'],'family'],
+  [['Suzhou Slow Trip','蘇州慢遊','苏州慢游'],['3 days','3天','3天'],['Museum · Master of the Nets · Jinji Lake','蘇州博物館 · 網師園 · 金雞湖','苏州博物馆 · 网师园 · 金鸡湖'],'family'],
+  [['Suzhou + Yangzhou','蘇州＋揚州','苏州＋扬州'],['5 days','5天','5天'],['Classic gardens then Slender West Lake (coming soon)','經典園林，再去瘦西湖（即將推出）','经典园林，再去瘦西湖（即将推出）'],'solo']
+];
+
+const HOTELS=[
+  [['Gusu Courtyard Inn','姑蘇庭院客棧','姑苏庭院客栈'],['HK$480–650','港幣480–650元','港币480–650元'],['near Pingjiang Rd','近平江路','近平江路'],0],
+  [['Lakeview Suites','湖景套房酒店','湖景套房酒店'],['HK$700–950','港幣700–950元','港币700–950元'],['near Jinji Lake','近金雞湖','近金鸡湖'],1],
+  [['Garden Gate Hotel','園門酒店','园门酒店'],['HK$550–780','港幣550–780元','港币550–780元'],['near Humble Garden','近拙政園','近拙政园'],1],
+  [['Canal House B&B','運河之家民宿','运河之家民宿'],['HK$380–520','港幣380–520元','港币380–520元'],['near Shantang St','近山塘街','近山塘街'],0]
+];
+
+const FOOD=[
+  [['Songhe Lou-style noodles','松鶴樓式麵食','松鹤楼式面食'],['Suzhou noodles','蘇州麵','苏州面'],'$',['Pingjiang Rd','平江路','平江路']],
+  [['Tea House on the Canal','運河茶館','运河茶馆'],['Tea & dim sum','茶與點心','茶与点心'],'$$',['Shantang St','山塘街','山塘街']],
+  [['Osmanthus Kitchen','桂花廚房','桂花厨房'],['Jiangnan classics','江南經典','江南经典'],'$$$',['Jinji Lake','金雞湖','金鸡湖']],
+  [['Tongli Dumpling Stall','同里餃子攤','同里饺子摊'],['Street food','街頭小吃','街头小吃'],'$',['Tongli','同里','同里']],
+  [['Moon Gate Vegetarian','月門素菜','月门素菜'],['Vegetarian','素菜','素菜'],'$$',['Master of the Nets','網師園','网师园']],
+  [['Lakeside Hotpot','湖畔火鍋','湖畔火锅'],['Hotpot','火鍋','火锅'],'$$',['SIP district','園區','园区']]
+];
+
+let POSTS=[
+  [['Mei','美','美'],['Hong Kong','香港','香港'],['Suzhou','蘇州','苏州'],['12–15 Nov','11月12–15日','11月12–15日'],['Solo','個人','个人'],['Looking for someone to explore gardens with!','想找人一起逛園林！','想找人一起逛园林！']],
+  [['Chan family','陳家','陈家'],['Macau','澳門','澳门'],['Suzhou','蘇州','苏州'],['20–23 Dec','12月20–23日','12月20–23日'],['Family','家庭','家庭'],['2 adults + 2 kids, relaxed pace.','兩大兩小，輕鬆節奏。','两大两小，轻松节奏。']],
+  [['Jason','積遜','杰森'],['Hong Kong','香港','香港'],['Suzhou → Yangzhou','蘇州→揚州','苏州→扬州'],['5–9 Jan','1月5–9日','1月5–9日'],['Group','結伴','结伴'],['Photography trip, 3 spots left.','攝影團，剩3個名額。','摄影团，剩3个名额。']],
+  [['Yan','阿欣','阿欣'],['Hong Kong','香港','香港'],['Suzhou','蘇州','苏州'],['28 Nov','11月28日','11月28日'],['Solo','個人','个人'],['Day trip, foodie.','一日遊，吃貨。','一日游，吃货。']],
+  [['Lam & Co','林家','林家'],['Macau','澳門','澳门'],['Tongli','同里','同里'],['2–4 Feb','2月2–4日','2月2–4日'],['Group','結伴','结伴'],['Water town weekend.','水鄉週末。','水乡周末。']],
+  [['Wing','阿榮','阿荣'],['Hong Kong','香港','香港'],['Suzhou','蘇州','苏州'],['10–12 Mar','3月10–12日','3月10–12日'],['Family','家庭','家庭'],['Parents + toddler.','父母＋幼兒。','父母＋幼儿。']]
+];
+
+const REW=[
+  [0,['Digital passport theme + welcome badge','數碼護照主題＋歡迎徽章','数码护照主题＋欢迎徽章'],'🎨'],
+  [500,['Suzhou tea house 20% off voucher','蘇州茶館八折優惠券','苏州茶馆八折优惠券'],'🍵'],
+  [1200,['HK$50 travel app credit (digital)','港幣50元旅遊App電子現金券','港币50元旅游App电子现金券'],'🎁']
+];
+
+let S={user:null,locale:0};
+try{const x=JSON.parse(localStorage.getItem('cl'));if(x)S=x}catch(e){}
+const save=()=>{try{localStorage.setItem('cl',JSON.stringify(S))}catch(e){}};
+const t=k=>(T[k]||[k,k,k])[S.locale],U=()=>S.user;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+const svgFallback=(s=36)=>`<svg width='${s}' height='${s}' viewBox='0 0 64 64' aria-label='CultureLink logo' style='flex:none'><rect width='64' height='64' rx='14' fill='#0E8574'/><path d='M18 44c0-10 6-18 14-18s14 8 14 18' fill='none' stroke='#F2B705' stroke-width='4' stroke-linecap='round'/><circle cx='32' cy='20' r='6' fill='#E8503A'/><circle cx='20' cy='44' r='4' fill='#F2B705'/><circle cx='44' cy='44' r='4' fill='#F2B705'/></svg>`;
+
+function logo(s=36){
+  return `<img src="${LOGO_URL}" alt="CultureLink logo" width="${s}" height="${s}" style="width:${s}px;height:${s}px;object-fit:contain;border-radius:6px" onerror="this.outerHTML='${svgFallback(s).replace(/'/g,"\\'")}'">`;
+}
+
+function img(src, cls, alt, fallbackHTML){
+  const id='img'+Math.random().toString(36).slice(2);
+  return `<span id="${id}" style="display:contents">
+    <img src="${src}" alt="${esc(alt||'')}" class="${cls||''}" style="display:none" onload="this.style.display='block';var f=document.getElementById('${id}-fb');if(f)f.remove()" onerror="this.remove();var f=document.getElementById('${id}-fb');if(f)f.style.display='block'">
+    <span id="${id}-fb" style="display:block">${fallbackHTML||''}</span>
+  </span>`;
+}
+
+const pts=()=>U().points,tierN=()=>pts()>=1200?'Ambassador':pts()>=500?'Voyager':'Explorer';
+function add(n){U().points+=n;save()}
+function status(i){const u=U();return u.mastered.includes(i)?'mastered':u.visited.includes(i)?'visited':'locked'}
+function modal(h){document.getElementById('md').innerHTML=h?`<div class="ov" onclick="if(event.target===this)modal()"><div class="md" role="dialog" aria-modal="true">${h}</div></div>`:''}
+const closeB=()=>`<button class="btn alt" onclick="modal()">${t('close')}</button>`;
+function go(r){location.hash=r}
+function setLoc(i){S.locale=i;save();document.documentElement.lang=LG[i];render()}
+
+function header(){
+  const u=U(),links=[['passport','🛂'],['explore','🧭'],['tree','🌳'],['companions','🤝'],['rewards','🎁'],['settings','⚙️'],['more','✨']],r=route();
+  const lang=`<select aria-label="${t('lang')}" onchange="setLoc(+this.value)">${LN.map((n,i)=>`<option value="${i}" ${i==S.locale?'selected':''}>${n}</option>`).join('')}</select>`;
+  const theme=`<button class="thm" onclick="tgTheme()" aria-label="${t('themeToggle')}" title="${t('themeToggle')}"><span class="thm-icon"></span></button>`;
+  const keyOf={passport:'passport',explore:'explore',tree:'tree_h',companions:'comp',rewards:'rewards',settings:'settings',more:'more'};
+  document.getElementById('hd').innerHTML=`<a class="logo" href="#${u?'passport':''}">${logo(34)}<span>CultureLink</span></a>`+(u?`<nav class="top" aria-label="Main">${links.map(l=>`<a href="${l[0]==='tree'?'culture-tree.html':'#'+l[0]}" class="${r==l[0]?'on':''}">${t(keyOf[l[0]])}</a>`).join('')}</nav>`:'<span class="sp"></span>')+theme+lang;
+  document.getElementById('ft').innerHTML=t('disc')+'<br>'+t('proto');
+  let nb=document.querySelector('nav.bot');if(nb)nb.remove();
+  if(u)document.body.insertAdjacentHTML('beforeend',`<nav class="bot" aria-label="Main">${links.map(l=>`<a href="${l[0]==='tree'?'culture-tree.html':'#'+l[0]}" class="${r==l[0]?'on':''}"><span>${l[1]}</span>${t(keyOf[l[0]])}</a>`).join('')}</nav>`);
+}
+const route=()=>location.hash.slice(1)||'';
+
+function landing(){
+  return `<section class="hero">${logo(88)}<h1>${t('tag')}</h1><p style="max-width:560px;margin:0 auto 18px">${t('sub')}</p><div class="row" style="justify-content:center"><button class="btn" onclick="go('login')">${t('signin')}</button><button class="btn ver" onclick="go('signup')">${t('create')}</button></div></section>
+  <div class="pp" style="margin:18px auto"><div class="av">🧑‍🎤</div><div><div class="serif" style="font-size:1.3rem">${t('sampleTraveller')}</div><div class="note" style="color:#e8dcc0">${t('hk')} · 🌸🌉🛶 · 120 ${t('pts')}</div></div></div>
+  <div class="grid" style="margin:24px 0 0">${[0,2,4,7].map(i=>`<div>${locImg(i,'cardimg')}<div class="note" style="text-align:center">${LOC[i][1][S.locale]}</div></div>`).join('')}</div>
+  <div class="grid" style="margin-top:24px">${[['🛂','f1'],['🧩','f2'],['🤝','f3']].map(f=>`<div class="card"><div style="font-size:2rem">${f[0]}</div><h3>${t(f[1])}</h3><p>${t(f[1]+'d')}</p></div>`).join('')}</div>`
+}
+function auth(signup){
+  return `<div class="card" style="max-width:420px;margin:30px auto"><h2>${signup?t('create'):t('signin')}</h2><form id="af" onsubmit="return doAuth(event,${signup})" novalidate>
+  ${signup?`<label>${t('name')}<input id="an" value="Alex"></label>`:''}
+  <label>${t('email')}<input id="ae" type="email" value="demo@example.com"></label>
+  <label>${t('pw')}<input id="ap" type="password" value="demo"></label>
+  ${signup?`<label>${t('home')}<select id="ah"><option>${t('hk')}</option><option>${t('macau')}</option></select></label><label>${t('style')}<select id="as"><option value="Solo">${t('solo')}</option><option value="Family">${t('family')}</option><option value="Both">${t('both')}</option></select></label>`:''}
+  <button class="btn" style="width:100%">${signup?t('create'):t('signin')}</button></form>
+  <p class="note">${t('proto')}</p><p><a href="#${signup?'login':'signup'}">${signup?t('signin'):t('create')}</a></p></div>`
+}
+function doAuth(e,signup){
+  e.preventDefault();const g=id=>(document.getElementById(id)||{}).value;
+  const old=S.user&&S.user.email===g('ae')?S.user:null;
+  S.user=old||{id:'u1',name:g('an')||g('ae').split('@')[0]||'Traveller',email:g('ae'),homeCity:g('ah')||t('hk'),travelStyle:g('as')||'Both',points:0,visited:[],mastered:[],scores:{},saved:[],since:new Date().toISOString().slice(0,10)};
+  save();go('passport');return false
+}
+
+function locImg(i,cls='cardimg'){
+  const fallback=art(i,'width:100%;height:100%;display:block');
+  return img(IMG.loc[i],cls,'Location',fallback);
+}
+function tripImg(i,cls='cardimg'){
+  const fallback=art([0,1,8,2][i],'width:100%;height:100%;display:block');
+  return img(IMG.trips[i],cls,'Trip',fallback);
+}
+function hotelImg(i,cls='cardimg'){
+  const fallback=art([3,7,0,4][i],'width:100%;height:100%;display:block');
+  return img(IMG.hotels[i],cls,'Hotel',fallback);
+}
+function foodImg(i,cls='cardimg'){
+  const fallback=art([3,4,7,9,8,5][i],'width:100%;height:100%;display:block');
+  return img(IMG.food[i],cls,'Restaurant',fallback);
+}
+function letterImg(i,cls='envimg'){
+  // User-created letters can make the list longer than the three built-in examples.
+  // Reuse the available letter artwork safely instead of passing undefined to art().
+  const count=IMG.letters.length;
+  const imageIndex=((Number(i)||0)%count+count)%count;
+  const fallback=art([0,9,3][imageIndex],'width:100%;height:100%;display:block');
+  return img(IMG.letters[imageIndex],cls,'Letter',fallback);
+}
+function treeCityImg(key,fallbackIdx,cls='cardimg'){
+  const fallback=art(fallbackIdx,'width:100%;height:100%;display:block');
+  return img(IMG.treeCity[key],cls,'City',fallback);
+}
+function treeItemImg(key,fallbackIdx,cls='cardimg'){
+  const fallback=art(fallbackIdx,'width:100%;height:100%;display:block');
+  return img(IMG.treeItem[key],cls,'Place',fallback);
+}
+function bannerImg(src,fallbackHTML){
+  return img(src,'banner','Banner',fallbackHTML||'');
+}
+
+function passportBook(){
+  const u=U(),L=S.locale;
+  const X={sw:['Swipe to turn pages','滑動翻頁','滑动翻页'],no:['Passport No.','護照編號','护照编号'],tp:['Travel Passport','旅遊護照','旅游护照'],id:['Holder','持有人','持有人'],pg:['Stamp pages','印章頁','印章页']};
+  const x=k=>X[k][L];
+  const slot=i=>{
+    const s=status(i),d=(u.dates||{})[i]||'',r=((i*37)%15)-7;
+    const inner=s=='locked'?'?':LOC[i][0];
+    return `<button class="st ${s}" style="--r:${r}deg" onclick="loc(${i})" aria-label="${esc(LOC[i][1][L])}"><div class="ring">${s=='locked'?inner:img(IMG.loc[i],'',LOC[i][1][L],inner)}</div><small><b>${LOC[i][1][L]}</b><br>${s=='locked'?t('locked'):(s=='mastered'?'★ ':'')+d}</small></button>`
+  };
+  const soon=i=>`<div class="st locked"><div class="ring">${img(IMG.loc[i],'', 'Coming soon', '🔒')}</div><small><b>${i==10?'揚州':'南京'}</b><br>${t('soon')}</small></div>`;
+  const mrz=(u.name.toUpperCase().replace(/[^A-Z]/g,'<')+'<<<<<<<<<<<<<<<<<<<<<<<<<<<<').slice(0,28).replace(/</g,'&lt;');
+  const pages=[
+    `<button class="pg cv ${u.theme?'imp':''}" onclick="bgo(1)" aria-label="${x('sw')}">${logo(96)}<div class="serif" style="font-size:1.7rem;margin-top:14px;letter-spacing:.08em">CULTURELINK</div><div style="letter-spacing:.3em;font-size:.8rem;margin:4px 0">${x('tp').toUpperCase()}</div><div class="serif" style="font-size:1.1rem">江蘇 · 旅遊護照</div><div style="margin-top:26px;font-size:.8rem;opacity:.85">← ${x('sw')}</div></button>`,
+    `<div class="pg"><h4>${x('id')} · ${t('passport')}</h4><div class="row" style="align-items:flex-start;gap:14px"><div style="width:96px;height:120px;border:2px solid #0E8574;border-radius:4px;display:grid;place-items:center;font-size:3.4rem;background:#e7dcc0;overflow:hidden">${AVATAR_URL?`<img src="${AVATAR_URL}" alt="Profile picture" style="width:100%;height:100%;object-fit:cover">`:'🧑‍🎤'}</div><div><div class="fld">${t('name')}</div><div class="fv">${esc(u.name)}</div><div class="fld">${t('home')}</div><div class="fv">${esc(u.homeCity)}</div><div class="fld">${x('no')}</div><div class="fv">CL${String(u.since).replace(/-/g,'')}</div></div></div><div class="row" style="margin-top:12px;gap:18px"><div><div class="fld">${t('since')}</div><div class="fv">${u.since}</div></div><div><div class="fld">${t('tier')}</div><div class="fv" style="color:#a07f10">${t(tierN())}</div></div><div><div class="fld">${t('pts')}</div><div class="fv">${pts()}</div></div></div><div class="mrz">P&lt;CLK&lt;${mrz}<br>CL${String(u.since).replace(/-/g,'')}&lt;HKG&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</div><span class="pgn">1</span></div>`,
+    [0,1,2,3].map(slot),[4,5,6,7].map(slot),
+    [8,9].map(slot).concat([soon(10),soon(11)])
+  ].map((v,k)=>Array.isArray(v)?`<div class="pg"><h4>${x('pg')} · ${k-1}</h4><div class="sg">${v.join('')}</div><span class="pgn">${k+1}</span></div>`:v);
+  const nxt=pts()>=500?1200:500;
+  return `<div class="book"><div class="sw" id="sw" onscroll="bsc(this)">${pages.join('')}</div><div class="row" style="justify-content:center;margin:14px 0"><button class="btn alt" onclick="bgo(-1)" aria-label="Previous page">‹</button><div class="dots">${pages.map((_,j)=>`<i class="${j?'':'on'}"></i>`).join('')}</div><button class="btn alt" onclick="bgo(1)" aria-label="Next page">›</button></div></div>
+  <div class="card" style="max-width:400px;margin:0 auto 10px"><div class="row"><b>${pts()}/${nxt} ${t('pts')}</b><span class="sp"></span><a href="#rewards">${t('rewards')}</a></div><div class="bar"><i style="width:${Math.min(100,pts()/nxt*100)}%"></i></div><p class="note" style="margin:8px 0 0">${t('stamps')} ${u.visited.length}/10 · ${t('disc')}</p></div>`
+}
+function bgo(d){const s=document.getElementById('sw');if(s)s.scrollBy({left:d*s.clientWidth,behavior:'smooth'})}
+function bsc(s){const k=Math.round(s.scrollLeft/s.clientWidth);document.querySelectorAll('.dots i').forEach((d,j)=>d.classList.toggle('on',j==k))}
+let filt='all';
+function passport(){
+  const u=U(),n=tierN(),nxt=pts()>=1200?1200:pts()>=500?1200:500;
+  const list=LOC.map((l,i)=>[l,i]).filter(([l,i])=>filt=='all'||(filt=='visited'?status(i)!='locked':status(i)=='locked'));
+  return `<div class="pp"><div class="av">🧑‍🎤</div><div class="sp"><div class="serif" style="font-size:1.5rem">${esc(u.name)}</div><div>${esc(u.homeCity)} · ${t('since')} ${u.since}</div><div><span class="tag g" style="background:var(--gold);color:#222">${t('tier')}: ${t(n)}</span></div></div><div style="text-align:center"><div class="serif" style="font-size:2rem">${pts()}</div>${t('pts')}</div></div>
+  <div class="card" style="margin:16px 0"><div class="row"><b>${pts()}/${nxt} ${t('pts')}</b><span class="sp"></span><a href="#rewards">${t('rewards')}</a></div><div class="bar" role="progressbar" aria-valuenow="${pts()}" aria-valuemax="${nxt}"><i style="width:${Math.min(100,pts()/nxt*100)}%"></i></div></div>
+  <div class="row"><h2 style="margin:0">${t('stamps')} ${u.visited.length}/10</h2><span class="sp"></span></div>
+  <div class="tabs" role="tablist">${[['all','all'],['visited','visited'],['locked','locked']].map(f=>`<button class="${filt==f[0]?'on':''}" onclick="filt='${f[0]}';render()">${t(f[1])}</button>`).join('')}</div>
+  <div class="grid">${list.map(([l,i])=>{const s=status(i);return `<button class="stamp ${s}" onclick="loc(${i})" aria-label="${esc(l[1][S.locale])}"><div class="em">${s=='mastered'?'🏅':l[0]}</div><div class="serif">${l[1][S.locale]}</div><span class="tag ${s!='locked'?'g':''}">${t(s)}</span></button>`}).join('')}</div>
+  <div class="grid" style="margin-top:16px">${[['瘦西湖 / Slender West Lake',10],['明孝陵 / Ming Xiaoling',11]].map(([x,i])=>`<div class="stamp locked" style="cursor:default">${locImg(i,'cardimg')}<div class="em">🔒</div>${x}<br><span class="tag">${t('soon')}</span></div>`).join('')}</div>`
+}
+
+let AID=0;
+const PAL=[['#9ed0c0','#f3e3b5'],['#b7c9e8','#f6dcc0'],['#f0b27a','#f9e3b0'],['#f7c6a5','#fbe9c8'],['#7fa8d6','#f5d9a8'],['#c9d6df','#eef2f4'],['#e8a87c','#f5e1b8'],['#ff9e7a','#ffd9a0'],['#1f3a5f','#e9c46a'],['#a8d5c2','#f2e8c9']];
+function art(i,st){
+  const p=PAL[i],g='g'+(AID++),dk='#23382c',k=['pav','rock','pag','bri','bri','mus','pag','lake','moon','bri'][i];
+  const pag=cx=>[0,1,2,3,4].map(n=>{const w=54-n*9,y=130-n*21;return `<rect x="${cx-w/2}" y="${y-13}" width="${w}" height="13" fill="${dk}"/><path d="M${cx-w/2-8} ${y-13}h${w+16}l-6 -8h-${w+4}z" fill="#D64530"/>`}).join('');
+  const M={
+    pav:`<path d="M90 98Q160 48 230 98Q160 86 90 98Z" fill="#D64530"/><rect x="108" y="98" width="6" height="34" fill="${dk}"/><rect x="206" y="98" width="6" height="34" fill="${dk}"/><rect x="98" y="128" width="124" height="6" fill="#6b5d4a"/><circle cx="52" cy="152" r="9" fill="#f4a6b8"/><circle cx="270" cy="148" r="8" fill="#f4a6b8"/><ellipse cx="70" cy="156" rx="15" ry="4" fill="#3d8f5f"/><ellipse cx="250" cy="154" rx="15" ry="4" fill="#3d8f5f"/>`,
+    rock:`<path d="M30 132L80 70L110 100L150 46L200 105L240 80L290 132Z" fill="#6f8a7a"/><path d="M150 46L170 80L150 74L135 86Z" fill="#a9c2b3"/><circle cx="60" cy="120" r="14" fill="#3d8f5f"/><circle cx="262" cy="122" r="12" fill="#3d8f5f"/>`,
+    pag:`<rect x="30" y="112" width="100" height="20" fill="#8c7b66"/>`+pag(200),
+    bri:`<path d="M30 134Q160 48 290 134L290 148L30 148Z" fill="#7a6a55"/><path d="M108 148Q160 92 212 148Z" fill="#4f9a8a"/><path d="M70 100v-12M250 100v-12" stroke="${dk}" stroke-width="3"/>`,
+    mus:`<path d="M40 132L100 78L160 132Z" fill="#f2f2f0"/><path d="M130 132L200 66L270 132Z" fill="#d8d8d4"/><path d="M200 66L270 132L200 132Z" fill="#9a9a96"/>`,
+    lake:`<g fill="${dk}"><rect x="40" y="96" width="18" height="36"/><rect x="64" y="76" width="14" height="56"/><rect x="84" y="100" width="22" height="32"/><rect x="230" y="88" width="16" height="44"/><rect x="252" y="70" width="12" height="62"/></g><circle cx="160" cy="96" r="32" fill="none" stroke="${dk}" stroke-width="5"/>`,
+    moon:`<rect x="52" y="34" width="216" height="8" fill="${dk}"/><rect x="60" y="42" width="200" height="90" fill="#efe6d2"/><circle cx="160" cy="88" r="34" fill="${p[1]}"/><circle cx="160" cy="88" r="34" fill="none" stroke="#D64530" stroke-width="4"/>`
+  };
+  return `<svg viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Illustration" style="${st||'width:100%;display:block;border-radius:10px'}"><defs><linearGradient id="${g}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${p[0]}"/><stop offset="1" stop-color="${p[1]}"/></linearGradient></defs><rect width="320" height="180" fill="url(#${g})"/><circle cx="${k=='moon'?270:250}" cy="46" r="18" fill="#fff6d0" opacity=".85"/><rect y="132" width="320" height="48" fill="#4f9a8a" opacity=".55"/>${M[k]}<path d="M20 150h60M120 164h80M230 156h60" stroke="#fff" opacity=".35" stroke-width="2"/></svg>`
+}
+
+function loc(i){
+  const l=LOC[i],s=status(i),u=U();
+  modal(`${locImg(i,'cardimg')}<h2 style="margin-top:10px">${l[0]} ${l[1][S.locale]}</h2><p class="note">${l[1][0]} · ${l[2]}</p><p><b>${t('hours')}:</b> ${l[3]}<br><b>${t('spot')}:</b> ${l[4]}</p>
+  ${s!='locked'?`<p><span class="tag g">${t(s)}</span> ${u.scores[i]!=null?u.scores[i]+'/5 '+t('score'):''}</p>`:''}<p class="note">${t('sourceNote')}</p>
+  <div class="row"><button class="btn" onclick="ci(${i},1)" ${s!='locked'?'':''}>${s!='locked'?t('already'):t('checkin')}</button><button class="btn ver" onclick="qs(${i})" ${s=='locked'?'disabled':''}>${t('quiz')}</button>${closeB()}</div>`)
+}
+function ci(i,step){
+  const l=LOC[i];
+  if(status(i)!='locked'&&step==1)return modal(`<h2>${t('already')}</h2><p>${l[1][S.locale]}</p>${closeB()}`);
+  if(step==1)modal(`<h2>${t('checkin')} · ${l[1][S.locale]}</h2><div class="view">📷</div><p class="note">${t('live')}</p><button class="btn" onclick="ci(${i},2)">${t('capture')}</button>`);
+  if(step==2)modal(`<h2>${l[1][S.locale]}</h2><div class="view" style="padding:0">${locImg(i,'')}</div><p>📍 31.3236°N, 120.6288°E <span class="tag g">✓ ${t('near')}</span></p><p class="note">${t('ver')}</p><button class="btn" onclick="ci(${i},3)">${t('submit')}</button>`);
+  if(step==3){
+    modal('<div class="spin" role="status"></div>');
+    setTimeout(()=>{
+      const u=U();
+      if(!u.visited.includes(i)){u.visited.push(i);(u.dates=u.dates||{})[i]=new Date().toISOString().slice(0,10);add(10)}
+      modal(`<div style="text-align:center"><div class="em thunk" style="font-size:5rem;color:var(--ver)">${l[0]}</div><h2>${t('got')}</h2><button class="btn" onclick="modal();go('passport');render()">${t('passport')}</button></div>`);
+      render()
+    },1500)
+  }
+}
+let Q=null;
+function qs(i){if(!QZ[i])return modal(`<h2>${LOC[i][1][S.locale]}</h2><p>${t('nq')}</p><p class="note">${t('aq')}</p>${closeB()}`);Q={i,n:0,s:0,a:null};qr()}
+function qr(){
+  const q=QZ[Q.i][Q.n],a=Q.a,L=S.locale;
+  modal(`<p class="note">${Q.n+1}/5</p><h3>${q[0][L]}</h3>${q[1][L].map((o,k)=>`<button class="opt ${a!=null?(k==q[2]?'ok':k==a?'no':''):''}" ${a!=null?'disabled':''} onclick="qa(${k})">${esc(o)}</button>`).join('')}
+  ${a!=null?`<p><b>${q[3][L]}</b></p><button class="btn" onclick="qn()">${Q.n==4?t('fin'):t('next')}</button>`:''}<p class="note">${t('aq')}</p>`)
+}
+function qa(k){if(Q.a!=null)return;Q.a=k;if(k==QZ[Q.i][Q.n][2]){Q.s++;add(20)}qr()}
+function qn(){
+  if(Q.n<4){Q.n++;Q.a=null;return qr()}
+  const u=U();u.scores[Q.i]=Math.max(u.scores[Q.i]||0,Q.s);
+  let bonus=false;
+  if(Q.s==5&&!u.mastered.includes(Q.i)){u.mastered.push(Q.i);add(50);bonus=true}
+  save();
+  modal(`<div style="text-align:center"><div style="font-size:4rem">${Q.s==5?'🏅':'📝'}</div><h2>${Q.s} / 5 ${t('score')}</h2>${bonus?`<p>🏅 ${t('mastered')}! +50</p>`:''}<button class="btn" onclick="modal();render()">${t('close')}</button></div>`);
+  render()
+}
+function rewards(){
+  return `<h2>${t('rewards')}</h2><p><b>${pts()}</b> ${t('pts')} <button class="btn alt" onclick="add(500);render()">Demo: +500</button></p><div class="grid">${REW.map((r,i)=>`<div class="card"><div style="font-size:2rem">${r[2]}</div><h3>${t('tier')} ${i+1}</h3><p>${r[1][S.locale]}</p><div class="bar"><i style="width:${Math.min(100,pts()/Math.max(r[0],1)*100)}%"></i></div><p class="note">${Math.min(pts(),r[0])}/${r[0]} ${t('pts')}</p><button class="btn" ${pts()<r[0]?'disabled':''} onclick="redeem(${i})">${t('redeem')}</button></div>`).join('')}</div><p class="note">${t('phys')}</p>`
+}
+function redeem(i){
+  if(i==0){
+    const u=U();u.theme=u.theme?'':'imp';save();render();
+    return modal(`<div style="text-align:center"><div style="font-size:3rem">🎨</div><h2>${u.theme?t('blackTheme'):t('defaultTheme')}</h2><p>${t('themeDesc')}</p><div class="row" style="justify-content:center"><button class="btn" onclick="modal();go('passport')">${t('passport')}</button>${closeB()}</div></div>`)
+  }
+  modal(`<div style="text-align:center"><div style="font-size:3rem">🎉</div><h2>${REW[i][1][S.locale]}</h2><div class="card serif" style="font-size:1.6rem;letter-spacing:.1em;border:2px dashed var(--gold)">CL-${['WELCOME','TEA20','HK50'][i]}-2026</div><p class="note">${t('mockCode')}</p>${closeB()}</div>`)
+}
+let ex='trips',mode='all';
+function explore(){
+  const ok=s=>mode=='all'||s==mode;
+  const tabs=`<div class="tabs">${['trips','hotels','food'].map(k=>`<button class="${ex==k?'on':''}" onclick="ex='${k}';render()">${t(k)}</button>`).join('')}<span class="sp"></span>${['all','solo','family'].map(k=>`<button class="${mode==k?'on':''}" onclick="mode='${k}';render()">${t(k)}</button>`).join('')}</div>`;
+  let h='';
+  if(ex=='trips')h=TRIPS.filter(x=>ok(x[3])).map((x,i)=>{
+    const id=TRIPS.indexOf(x),sv=U().saved.includes(id);
+    return `<div class="card">${tripImg(id)}<h3 style="margin-top:10px">${x[0][S.locale]}</h3><span class="tag g">${x[1][S.locale]}</span><span class="tag">${t(x[3])}</span><p>${x[2][S.locale]}</p><button class="btn ${sv?'alt':''}" onclick="svT(${id})">${sv?'✓ '+t('saved'):t('save')}</button></div>`
+  }).join('');
+  if(ex=='hotels')h=HOTELS.filter(x=>mode!='family'||x[3]).map(x=>`<div class="card">${hotelImg(HOTELS.indexOf(x))}<h3 style="margin-top:10px">${x[0][S.locale]}</h3><p>${x[1][S.locale]} / ${t('night')}<br>${x[2][S.locale]}</p>${x[3]?`<span class="tag g">${t('family')}</span>`:''}<br><button class="btn alt" onclick="modal('<p>Mock external link.</p>'+closeB())">${t('view')}</button></div>`).join('');
+  if(ex=='food')h=FOOD.map(x=>`<div class="card">${foodImg(FOOD.indexOf(x))}<h3 style="margin-top:10px">${x[0][S.locale]}</h3><p>${x[1][S.locale]} · ${x[2]}</p><span class="tag">${x[3][S.locale]}</span></div>`).join('');
+  return `<h2>${t('explore')}</h2>${myTrips()}${tabs}<div class="grid">${h}</div><p class="note">${t('prototypeContent')}</p>`
+}
+function myTrips(){
+  const s=U().saved;
+  return `<div class="card" style="margin:10px 0"><h3 style="font-size:1.1rem">🧳 ${t('myTripTitle')} (${s.length})</h3>${s.length?s.map(id=>`<div class="row" style="padding:4px 0"><span><b>${TRIPS[id][0][S.locale]}</b> <span class="tag g">${TRIPS[id][1][S.locale]}</span><br><span class="note">${TRIPS[id][2][S.locale]}</span></span><span class="sp"></span><button class="btn alt" onclick="svT(${id})" aria-label="${t('remove')}">✕</button></div>`).join(''):'<p class="note">'+t('nothingSaved')+'</p>'}</div>`
+}
+function svT(id){const s=U().saved,k=s.indexOf(id);k<0?s.push(id):s.splice(k,1);save();render()}
+function companions(){
+  return `<div class="row"><h2 style="margin:0">${t('comp')}</h2><span class="sp"></span><button class="btn" onclick="postM()">${t('post')}</button></div><p class="note">⚠️ ${t('safe')}</p><div class="grid">${POSTS.map((p,i)=>`<div class="card"><div class="row"><div class="av" style="width:44px;height:44px;font-size:1.3rem">${esc(p[0][S.locale])[0]}</div><div><b>${esc(p[0][S.locale])}</b><br><span class="note">${esc(p[1][S.locale])}</span></div></div><p>📍 ${esc(p[2][S.locale])}<br>📅 ${esc(p[3][S.locale])} <span class="tag g">${esc(p[4][S.locale])}</span></p><p>“${esc(p[5][S.locale])}”</p><div class="row"><button class="btn alt" onclick="this.textContent='✓';this.disabled=1">${t('interested')}</button><button class="btn" onclick="chat(${i})">${t('msg')}</button></div></div>`).join('')}</div>`
+}
+function postM(){
+  modal(`<h2>${t('post')}</h2><label>${t('dest')}<input id="pd" value="${t('suzhou')}"></label><label>${t('dates')}<input id="pt" value="12月1–3日"></label><label>${t('style')}<select id="ps"><option>${t('solo')}</option><option>${t('family')}</option><option>${t('group')}</option></select></label><label>${t('message')}<textarea id="pm" rows="3"></textarea></label><button class="btn" onclick="POSTS.unshift([[U().name,U().name,U().name],[U().homeCity,U().homeCity,U().homeCity],[pd.value,pd.value,pd.value],[pt.value,pt.value,pt.value],[ps.value,ps.value,ps.value],[pm.value||'加入我！',pm.value||'加入我！',pm.value||'加入我！']]);modal();render()">${t('post')}</button>`)
+}
+function chat(i){
+  modal(`<h2>${esc(POSTS[i][0][S.locale])}</h2><p class="card">${t('hello')}</p><p class="card" style="margin-left:30px;background:var(--bd)">${t('yesPublic')}</p><input aria-label="Message" placeholder="${t('msg')}…"><div class="row"><button class="btn" onclick="modal()">${t('msg')}</button>${closeB()}</div>`)
+}
+
+/* Settings (with logo uploader) */
+function settingsWithLogo(){
+  const u=U();
+  return `<h2>${t('settings')}</h2>
+  <div class="card" style="max-width:480px;margin-bottom:14px"><h3 style="font-size:1.1rem">👤 Profile picture</h3>
+    <div class="row"><div style="width:64px;height:64px;border:1px solid var(--bd);border-radius:50%;overflow:hidden;display:grid;place-items:center;background:var(--card);font-size:1.8rem">${AVATAR_URL?`<img src="${AVATAR_URL}" alt="Profile picture" style="width:100%;height:100%;object-fit:cover">`:'👤'}</div>
+    <div class="sp"><label class="note">Upload a profile picture (PNG/JPG).<input type="file" accept="image/*" onchange="uploadLogo(this)"></label></div>
+    <button class="btn alt" onclick="resetLogo()">Remove picture</button></div>
+  </div>
+  <div class="card" style="max-width:480px"><label>${t('name')}<input id="sn" value="${esc(u.name)}"></label><label>${t('home')}<select id="sh"><option ${u.homeCity==t('hk')?'selected':''}>${t('hk')}</option><option ${u.homeCity==t('macau')?'selected':''}>${t('macau')}</option></select></label><label>${t('style')}<select id="ss">${['Solo','Family','Both'].map(x=>`<option value="${x}" ${u.travelStyle==x?'selected':''}>${t(x.toLowerCase())}</option>`).join('')}</select></label><p>${t('pts')}: <b>${pts()}</b> · ${t('badges')}: ${u.theme?'👋':''}${u.visited.length?'🛂':''}${u.mastered.length?'🏅':''}${pts()>=500?'🍵':''}</p>${myTrips()}<div class="row"><button class="btn" onclick="U().name=sn.value;U().homeCity=sh.value;U().travelStyle=ss.value;save();render()">${t('save2')}</button><button class="btn alt" onclick="S.user=null;save();go('')">${t('signout')}</button></div></div>`
+}
+function uploadLogo(inp){
+  const f=inp.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{
+    const im=new Image();
+    im.onload=()=>{
+      const k=Math.min(1,256/Math.max(im.width,im.height)),c=document.createElement('canvas');
+      c.width=im.width*k;c.height=im.height*k;
+      c.getContext('2d').drawImage(im,0,0,c.width,c.height);
+      const data=c.toDataURL('image/png');
+      try{localStorage.setItem('cl-avatar',data)}catch(e){}
+      AVATAR_URL=data;
+      render()
+    };
+    im.src=r.result
+  };
+  r.readAsDataURL(f)
+}
+function resetLogo(){
+  try{localStorage.removeItem('cl-avatar')}catch(e){}
+  AVATAR_URL='';
+  render()
+}
+
+const DQ=[['Travel pace',['Slow','Balanced','Packed']],['What you love most',['Gardens','Food','Photography','History']],['Who travels',['Solo','Family','Group']],['Best season',['Spring','Autumn','Winter']],['Food mood',['Street food','Tea & dim sum','Vegetarian']]];
+let DS={},showX=0,TMP=[],MR,AU=null;
+const AUDS={};
+
+const pgMore=()=>`<h2>✨ ${t('more')}</h2><div class="grid">${[['dna','🧬','dna_h','moreDesc'],['sim','🔍','sim_h','simDesc'],['forum','💌','forum_h','forumDesc']].map(c=>`<a class="card" href="#${c[0]}" style="text-decoration:none;color:inherit"><div style="font-size:2.2rem">${c[1]}</div><h3>${t(c[2])}</h3><p class="note">${t(c[3])}</p></a>`).join('')}</div><p class="note">${t('prototypeContent')}</p>`;
+
+function pgDna(){
+  const u=U();
+  if(!u.dna)return `<h2>🧬 ${t('dna_h')}</h2><p class="note">${t('questionnaire')}</p>${DQ.map((q,i)=>`<div class="card" style="margin:10px 0"><b>${q[0]}</b><div class="tabs">${q[1].map((o,j)=>`<button class="${DS[i]==j?'on':''}" onclick="DS[${i}]=${j};render()">${o}</button>`).join('')}</div></div>`).join('')}<button class="btn" ${Object.keys(DS).length<5?'disabled':''} onclick="U().dna=DQ.map((q,i)=>q[1][DS[i]]);U().x={};save();render()">${t('dna_btn')}</button>`;
+  const d=u.dna,x=u.x||{},n=s=>parseInt(s),comp=Math.min(100,60+['budget','mood','days'].filter(k=>x[k]).length*13+(x.flexDates?10:0));
+  const sc=r=>{
+    let s=50;
+    const tx=(r[0]+r[2]).toLowerCase(),k={Gardens:['garden'],Food:['tongli','noodle'],Photography:['pingjiang','shantang','lake'],History:['museum','tiger','gate']}[d[1]];
+    if(k&&k.some(w=>tx.includes(w)))s+=25;
+    if(r[3]==d[2].toLowerCase())s+=15;
+    if(d[0]=='Slow'&&n(r[1])>=3)s+=10;
+    if(d[0]=='Packed'&&n(r[1])==1)s+=10;
+    if(x.days&&n(r[1])>x.days)s-=40;
+    return s
+  };
+  const top=TRIPS.map((r,i)=>[r,i,sc(r)]).sort((a,b)=>b[2]-a[2]).slice(0,3),cap={Low:450,Mid:600,High:9999}[x.budget||'High'];
+  const hot=HOTELS.filter(h=>n(h[1][0].slice(3))<=cap&&(d[2]!='Family'||h[3])).slice(0,2),pt=POSTS.map((p,i)=>[p,i]).filter(([p])=>p[4][0]==d[2]||p[4][0]=='Group').slice(0,3);
+  return `<div class="row"><h2 style="margin:0">🧬 ${t('dna_h')}</h2><span class="sp"></span><button class="btn alt" onclick="U().dna=null;DS={};save();render()">${t('retake')}</button></div><p>${d.map(v=>`<span class="tag g">${v}</span>`).join('')}${['budget','mood'].filter(k=>x[k]).map(k=>`<span class="tag">${k}: ${x[k]}</span>`).join('')}${x.days?`<span class="tag">${t('days')}: ${x.days}</span>`:''}${x.flexDates?'<span class="tag g">🔄 '+t('flex')+'</span>':''}</p><p class="note">${t('profileAccuracy')} ${comp}%</p><div class="bar"><i style="width:${comp}%"></i></div>
+  <button class="btn ver" style="margin:12px 0" onclick="showX=!showX;render()">➕ ${t('addMore')}</button>${showX?`<div class="card"><label>${t('budget')}<select id="xb"><option>${t('low')}</option><option>${t('mid')}</option><option>${t('high')}</option></select></label><label>${t('mood')}<select id="xm"><option>${t('relax')}</option><option>${t('adventure')}</option><option>${t('culture')}</option><option>${t('romantic')}</option></select></label><label>${t('days')}<div class="row" style="gap:6px"><input id="xd" type="number" min="1" max="30" placeholder="e.g. 3" style="flex:1;margin:0"><button class="btn alt" onclick="xd.value=''" style="flex:none;white-space:nowrap;padding:.4em .7em">🔄 ${t('flex')}</button></div></label><button class="btn" onclick="U().x={budget:xb.value,mood:xm.value,days:xd.value?+xd.value:null,flexDates:!xd.value};showX=0;save();render()">${t('save_')}</button></div>`:''}
+  <h3>${t('tripsForYou')}</h3><div class="grid">${top.map(([r,i,s])=>`<div class="card">${tripImg(i)}<h3 style="margin-top:8px">${r[0][S.locale]}</h3><span class="tag g">${Math.max(20,Math.min(98,s))}% match</span><span class="tag">${r[1][S.locale]}</span><p>${r[2][S.locale]}</p></div>`).join('')}</div>
+  <h3>${t('stay')}</h3><p>${hot.map(h=>`${h[0][S.locale]} (${h[1][S.locale]})`).join(' · ')||'No hotel fits that budget yet.'}</p><h3>${t('partners')}</h3><div class="grid">${pt.map(([p,i])=>`<div class="card"><b>${esc(p[0][S.locale])}</b> <span class="tag g">${p[4][S.locale]}</span><p>📍 ${esc(p[2][S.locale])} · ${esc(p[3][S.locale])}</p><button class="btn" onclick="chat(${i})">${t('msg')}</button></div>`).join('')}</div>`
+}
+
+const SIM=[
+  ['🎬',['Classic single-screen cinemas in Hong Kong','香港的經典單影院戲院','香港的经典单影院戏院'],['Nanjing’s Republic-era theatre and cinema buildings in the old city. Specific venues to be verified.','南京舊城的民國時期劇院與影院建築。具體場所有待核實。','南京旧城的民国时期剧院与影院建筑。具体场所有待核实。'],['Both cities keep the glamour of mid-century movie culture alive.','兩座城市都保留著二十世紀中葉電影文化的魅力。','两座城市都保留着二十世纪中叶电影文化的魅力。'],2],
+  ['🏛️',['Bank of China Tower (I. M. Pei)','中銀大廈（貝聿銘）','中银大厦（贝聿铭）'],['Suzhou Museum, also designed by I. M. Pei','蘇州博物館，同樣由貝聿銘設計','苏州博物馆，同样由贝聿铭设计'],['Same architect: modern geometry meets Chinese tradition.','同一位建築師：現代幾何遇上中國傳統。','同一位建筑师：现代几何遇上中国传统。'],5],
+  ['🥢',['Dim sum teahouses','點心茶樓','点心茶楼'],['Yangzhou morning tea (早茶) culture','揚州早茶文化','扬州早茶文化'],['Slow mornings, tea, and small shared plates.','悠閒早晨、茶與小碟共享。','悠闲早晨、茶与小碟共享。'],4],
+  ['🚶',['Old streets and heritage trails','老街與文物徑','老街与文物径'],['Pingjiang Road and Shantang Street, Suzhou','蘇州平江路與山塘街','苏州平江路与山塘街'],['Historic lanes with shops, snacks and a local pace.','歷史街巷，商店、小吃與本地節奏。','历史街巷，商店、小吃与本地节奏。'],3],
+  ['🌆',['Victoria Harbour waterfront','維多利亞港海濱','维多利亚港海滨'],['Jinji Lake, Suzhou','蘇州金雞湖','苏州金鸡湖'],['A city skyline reflected on open water.','城市天際線倒映在開闊水面上。','城市天际线倒映在开阔水面上。'],7],
+  ['⛪',['Macau’s East-meets-West heritage','澳門中西交融的文化遺產','澳门中西交融的文化遗产'],['Nanjing’s Republic-era architecture','南京民國時期建築','南京民国时期建筑'],['Layers of history where cultures met.','文化交會處的歷史層疊。','文化交汇处的历史层叠。'],2]
+];
+
+const pgSim=()=>`<h2>🔍 ${t('sim_h')}</h2><p class="note">${t('ifYouLove')}</p><div class="grid">${SIM.map(s=>`<div class="card"><div class="row"><span style="font-size:2rem">${s[0]}</span><b>${s[1][S.locale]}</b></div><p class="note">↓ ${t('youMightLove')}</p>${locImg(s[4])}<p><b>${s[2][S.locale]}</b></p><p class="note">${s[3][S.locale]}</p></div>`).join('')}</div>`;
+
+/* Culture tree — destinations and prototype missions from the updated fieldwork table */
+const TREE=[
+  { key:'nanjing', names:['Nanjing','南京','南京'], fb:2, items:[
+    { key:'nj-xiaoling', n:['Ming Xiaoling Museum','明孝陵博物館','明孝陵博物馆'], fb:11, experience:['Ming Xiaoling Museum','明孝陵博物館','明孝陵博物馆'], reason:['Imperial history and heritage; a TIME BRIDGE story about historical memory.','帝王歷史與文化遺產；以「時光之橋」故事探索歷史記憶。','帝王历史与文化遗产；以“时光之桥”故事探索历史记忆。'] },
+    { key:'nj-qinhuai', n:['Qinhuai River / Confucius Temple','秦淮河／夫子廟','秦淮河／夫子庙'], fb:3, experience:['Historic waterways and temple area','歷史水道與廟宇區域','历史水道与庙宇区域'], reason:['Urban life; QR cultural discovery mission.','城市生活；以 QR code 進行文化探索任務。','城市生活；通过 QR code 进行文化探索任务。'] },
+    { key:'nj-laomendong', n:['Laomendong','老門東','老门东'], fb:3, experience:['Historic streets, crafts and food','歷史街巷、手工藝與美食','历史街巷、手工艺与美食'], reason:['Local experience discovery.','探索在地生活體驗。','探索当地生活体验。'] }
+  ]},
+  { key:'suzhou', names:['Suzhou','蘇州','苏州'], fb:0, items:[
+    { key:'sz-gardens', n:['Classical gardens','古典園林','古典园林'], fb:0, experience:['Classical gardens','古典園林','古典园林'], reason:['Distinctive Jiangnan aesthetics; comparison with Yangzhou gardens.','獨特的江南美學；與揚州園林作比較。','独特的江南美学；与扬州园林作比较。'] },
+    { key:'sz-kunqu', n:['Kunqu Opera','崑曲','昆曲'], fb:5, experience:['Kunqu Opera','崑曲','昆曲'], reason:['Traditional performing arts; cultural explanation and listening mission.','傳統表演藝術；文化解說與聆聽任務。','传统表演艺术；文化讲解与聆听任务。'] },
+    { key:'sz-shantang', n:['Shantang Street','山塘街','山塘街'], fb:4, experience:['Shantang Street','山塘街','山塘街'], reason:['Canal-side historic district; connection map and QR story.','運河旁的歷史街區；連結地圖與 QR 故事。','运河旁的历史街区；连接地图与 QR 故事。'] }
+  ]},
+  { key:'wuxi', names:['Wuxi','無錫','无锡'], fb:7, items:[
+    { key:'wx-huishan', n:['Huishan Ancient Town and clay figurines','惠山古鎮與泥人','惠山古镇与泥人'], fb:9, experience:['Huishan Ancient Town and clay figurines','惠山古鎮與泥人','惠山古镇与泥人'], reason:['Ancestral halls and craft heritage; hands-on culture mission.','祠堂與工藝文化遺產；動手體驗文化任務。','祠堂与工艺文化遗产；动手体验文化任务。'] },
+    { key:'wx-qingming', n:['Qingming Bridge Ancient Canal Area','清名橋古運河區','清名桥古运河区'], fb:4, experience:['Qingming Bridge Ancient Canal Area','清名橋古運河區','清名桥古运河区'], reason:['Canal neighbourhoods; connect Wuxi water-life story with Yangzhou.','運河街區；將無錫水鄉生活故事與揚州連結。','运河街区；将无锡水乡生活故事与扬州连接。'] },
+    { key:'wx-yuantouzhu', n:['Yuantouzhu / Taihu Lake','黿頭渚／太湖','鼋头渚／太湖'], fb:7, experience:['Yuantouzhu / Taihu Lake','黿頭渚／太湖','鼋头渚／太湖'], reason:['Landscape and seasonal experience; personalized nature route.','自然景觀與季節體驗；個人化自然路線。','自然景观与季节体验；个性化自然路线。'] }
+  ]},
+  { key:'yangzhou', names:['Yangzhou','揚州','扬州'], fb:4, items:[
+    { key:'yz-grand-canal', n:['China Grand Canal Museum','中國大運河博物館','中国大运河博物馆'], fb:5, experience:['China Grand Canal Museum','中國大運河博物館','中国大运河博物馆'], reason:['Canal history, trade and cultural exchange; interactive timeline.','運河歷史、貿易與文化交流；互動時間軸。','运河历史、贸易与文化交流；互动时间轴。'] },
+    { key:'yz-slender', n:['Slender West Lake','瘦西湖','瘦西湖'], fb:10, experience:['Slender West Lake','瘦西湖','瘦西湖'], reason:['Water landscape and garden culture; compare with Suzhou.','水景與園林文化；與蘇州作比較。','水景与园林文化；与苏州作比较。'] },
+    { key:'yz-dongguan', n:['Dongguan Street and Huaiyang food culture','東關街與淮揚飲食文化','东关街与淮扬饮食文化'], fb:3, experience:['Dongguan Street and Huaiyang food culture','東關街與淮揚飲食文化','东关街与淮扬饮食文化'], reason:['Historic commerce and local food; taste-related cultural mission.','歷史商業與地方美食；以品嚐為主題的文化任務。','历史商业与地方美食；以品尝为主题的文化任务。'] }
+  ]}
+];
+
+const TQ=[
+  [['Which city has Slender West Lake?','哪個城市有瘦西湖？','哪个城市有瘦西湖？'],[['Suzhou','揚州','揚州'],['Suzhou','Yangzhou','Yangzhou'],['Suzhou','Yangzhou','Yangzhou']],1],
+  [['Where is Ming Xiaoling?','明孝陵在哪裡？','明孝陵在哪里？'],[['Yangzhou','Suzhou','Nanjing'],['Yangzhou','Suzhou','Nanjing'],['Yangzhou','Suzhou','Nanjing']],2],
+  [['Which city has Humble Administrator’s Garden?','哪個城市有拙政園？','哪个城市有拙政园？'],[['Suzhou','Nanjing','Yangzhou'],['Suzhou','Nanjing','Yangzhou'],['Suzhou','Nanjing','Yangzhou']],0]
+];
+function tqSelect(b){
+  const group=b.closest('.tree-q');
+  if(!group||group.dataset.submitted==='1')return;
+  group.querySelectorAll('button.opt').forEach(x=>{x.classList.remove('selected');x.setAttribute('aria-pressed','false')});
+  b.classList.add('selected');b.setAttribute('aria-pressed','true');
+  group.querySelector('.tree-submit').disabled=false;
+}
+function tqSubmit(b){
+  const group=b.closest('.tree-q');
+  if(!group||group.dataset.submitted==='1')return;
+  const selected=group.querySelector('button.opt.selected');
+  if(!selected)return;
+  const correct=selected.dataset.ok==='1';
+  group.dataset.submitted='1';
+  group.querySelectorAll('button.opt').forEach(x=>{
+    x.disabled=true;
+    if(x.dataset.ok==='1')x.classList.add('ok');
+    else if(x===selected)x.classList.add('no');
+  });
+  b.disabled=true;
+  const result=group.querySelector('.tree-result');
+  result.textContent=correct?'✓ '+t('treeCorrect'):'✕ '+t('treeIncorrect');
+  result.classList.toggle('ok',correct);
+  result.classList.toggle('no',!correct);
+}
+
+function pgTree(){
+  setTimeout(()=>{
+    const o=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')}),{threshold:.1});
+    document.querySelectorAll('.tn').forEach(n=>o.observe(n))
+  },50);
+  return `<h2>🌳 ${t('tree_h')}</h2><p class="note">${t('scrollDown')}</p>
+  <div class="trunk">${TREE.map(c=>`
+    <div class="tn card"><h3>📍 ${c.names[S.locale]}</h3>
+      ${treeCityImg(c.key,c.fb)}
+      <div class="trunk">${c.items.map(l=>`
+        <details class="tn">
+          <summary><b>${l.n[S.locale]}</b></summary>
+          ${treeItemImg(l.key,l.fb)}
+          <p><b>${S.locale===0?'Experience':S.locale===1?'體驗':'体验'}:</b> ${l.experience[S.locale]}</p>
+          <p><b>${S.locale===0?'Why include it / prototype use':S.locale===1?'納入原因／原型用途':'纳入原因／原型用途'}:</b> ${l.reason[S.locale]}</p>
+        </details>`).join('')}
+      </div>
+    </div>`).join('')}
+  </div>
+  <div class="tn card"><h3>🌳 ${t('treeQuiz')}</h3>
+    ${TQ.map((q,qi)=>`<section class="tree-q" data-submitted="0" style="padding:12px 0;border-bottom:1px solid var(--bd)"><p><b>${qi+1}. ${q[0][S.locale]}</b></p>${q[1][S.locale].map((o,j)=>`<button type="button" class="opt" data-ok="${j==q[2]?'1':'0'}" aria-pressed="false" onclick="tqSelect(this)">${esc(o)}</button>`).join('')}<div class="row" style="align-items:center;margin-top:8px"><button type="button" class="btn tree-submit" disabled onclick="tqSubmit(this)">${t('submit')}</button><span class="tree-result note" aria-live="polite"></span></div></section>`).join('')}
+  </div>`
+}
+
+let LET=[
+  [['Mei','美','美'],['Humble Administrator’s Garden','拙政園','拙政园'],['Lotus morning','荷花清晨','荷花清晨'],['Go before 9am for quiet paths and soft light.','早上九點前來，路徑清幽、光線柔和。','早上九点前来，路径清幽、光线柔和。'],[],[['Wing','阿榮','阿荣'],['Thanks, saving this!','多謝，收藏了！','多谢，收藏了！']]],
+  [['Chan family','陳家','陈家'],['Tongli','同里','同里'],['Kids loved the boats','小朋友愛上小船','小朋友爱上小船'],['Take the canal boat first, then walk the bridges.','先坐運河船，再走橋。','先坐运河船，再走桥。'],[],[]],
+  [['Yan','阿欣','阿欣'],['Pingjiang Road','平江路','平江路'],['Dawn on the stone bridge','石橋上的黎明','石桥上的黎明'],['Arrive at sunrise. The lane is empty and golden.','日出時抵達。小巷空無一人，金黃一片。','日出时抵达。小巷空无一人，金黄一片。'],[],[['Jason','積遜','杰森'],['Great tip!','好貼士！','好贴士！']]]
+];
+const LETN=LET.length;
+function letterText(value,fallback=''){
+  if(Array.isArray(value))return [0,1,2].map(i=>String(value[i]??value[0]??fallback));
+  const v=String(value??fallback);return [v,v,v];
+}
+function normalizeLetter(value){
+  if(!Array.isArray(value)||value.length<6)return null;
+  const comments=Array.isArray(value[5])?value[5].filter(Array.isArray).map(c=>[
+    letterText(c[0],'Traveller'),letterText(c[1],''),Array.isArray(c[2])?c[2].filter(x=>typeof x==='string'):[]
+  ]):[];
+  return [letterText(value[0],'Traveller'),letterText(value[1],''),letterText(value[2],'Untitled'),letterText(value[3],''),Array.isArray(value[4])?value[4].filter(x=>typeof x==='string'):[],comments];
+}
+try{
+  const stored=JSON.parse(localStorage.getItem('cl-letters')||'[]');
+  if(Array.isArray(stored))LET=stored.map(normalizeLetter).filter(Boolean).concat(LET);
+}catch(e){/* Ignore damaged saved letter data and keep the built-in examples available. */}
+function saveLetters(){
+  try{localStorage.setItem('cl-letters',JSON.stringify(LET.slice(0,Math.max(0,LET.length-LETN))))}catch(e){}
+}
+const pgForum=()=>{
+  const u=U(),cs=u.caps||[],today=new Date().toISOString().slice(0,10);
+  return `<div class="row"><h2 style="margin:0">💌 ${t('forum_h')}</h2><span class="sp"></span><button class="btn" onclick="writeL()">${t('letters_w')}</button></div><p class="note">${t('sealedLetter')}</p><div class="grid">${LET.map((l,i)=>`<button class="card env" onclick="openL(${i})">${letterImg(i)}<div class="envbody"><b>${esc(l[2][S.locale])}</b><br><span class="note">${esc(l[0][S.locale])} · ${esc(l[1][S.locale])} · 💬 ${l[5].length}</span></div></button>`).join('')}</div><hr><button class="btn ver" onclick="capM()">⏳ ${t('capsule_h')}</button>${cs.map(c=>`<div class="card" style="margin-top:10px">${c.date<=today?`🔓 <b>${esc(c.place)}</b> <button class="btn alt" onclick="openC(${c.id})">${t('open')}</button>`:`🔒 <b>${esc(c.place)}</b> ${t('openOn')} ${c.date}`}</div>`).join('')}`
+};
+function pics(inp,cb){
+  const out=[];let n=inp.files.length;
+  if(!n)return cb([]);
+  [...inp.files].forEach(f=>{
+    const r=new FileReader();
+    r.onload=()=>{
+      const im=new Image();
+      im.onload=()=>{
+        const k=Math.min(1,800/Math.max(im.width,im.height)),c=document.createElement('canvas');
+        c.width=im.width*k;c.height=im.height*k;
+        c.getContext('2d').drawImage(im,0,0,c.width,c.height);
+        out.push(c.toDataURL('image/jpeg',.8));
+        if(!--n)cb(out)
+      };
+      im.onerror=()=>{if(!--n)cb(out)};
+      im.src=r.result
+    };
+    r.readAsDataURL(f)
+  })
+}
+function openL(i){
+  TMP=[];
+  const el=document.querySelectorAll('.env')[i];
+  if(el&&!el.classList.contains('env-open')){el.classList.add('env-open');setTimeout(()=>_openL(i),500)}else{_openL(i)}
+}
+function _openL(i){
+  const l=LET[i];
+  if(!l)return modal(`<p>${t('noComments')}</p>${closeB()}`);
+  const comments=l[5].map(c=>`<p><b>${esc(c[0][S.locale])}:</b> ${esc(c[1][S.locale])}${(c[2]||[]).map(src=>`<br><img src="${src}" alt="">`).join('')}</p>`).join('')||'<p class="note">'+t('noComments')+'</p>';
+  modal(`<h2>💌 ${esc(l[2][S.locale])}</h2><p class="note">${esc(l[0][S.locale])} · ${esc(l[1][S.locale])}</p>${letterImg(i,'cardimg')}<div class="paper">${esc(l[3][S.locale])}${l[4].map(src=>`<img src="${src}" alt="">`).join('')}</div><h3 style="margin-top:12px">${t('comments')}</h3>${comments}<input id="letter-comment" aria-label="Comment" placeholder="${t('comment')}"><label class="note">${t('addPhoto')}<input id="letter-comment-photos" type="file" accept="image/*" multiple onchange="pics(this,v=>TMP=v)"></label><div class="row"><button class="btn" onclick="submitLetterComment(${i})">${t('comment')}</button>${closeB()}</div>`);
+}
+function submitLetterComment(i){
+  const letter=LET[i],field=document.getElementById('letter-comment'),comment=(field?.value||'').trim();
+  if(!letter||(!comment&&!TMP.length))return;
+  const author=U()?.name||'Traveller';
+  letter[5].push([[author,author,author],[comment||'📷',comment||'📷',comment||'📷'],TMP.slice()]);
+  TMP=[];saveLetters();_openL(i);
+}
+function writeL(){
+  TMP=[];
+  modal(`<h2>${t('letters_w')}</h2><label>${t('place')}<select id="letter-place">${LOC.map(l=>`<option>${l[1][S.locale]}</option>`).join('')}</select></label><label>${t('title')}<input id="letter-title" maxlength="100"></label><label>${t('writeNote')}<textarea id="letter-body" rows="5" maxlength="3000"></textarea></label><label>${t('photos')}<input id="letter-photos" type="file" accept="image/*" multiple onchange="pics(this,v=>TMP=v)"></label><button class="btn" onclick="submitLetter()">${t('sealPost')}</button>${closeB()}`);
+}
+function submitLetter(){
+  const place=document.getElementById('letter-place')?.value||'';
+  const title=(document.getElementById('letter-title')?.value||'').trim();
+  const body=(document.getElementById('letter-body')?.value||'').trim();
+  if(!body){document.getElementById('letter-body')?.focus();return;}
+  const author=U()?.name||'Traveller',safeTitle=title||'Untitled';
+  LET.unshift([[author,author,author],[place,place,place],[safeTitle,safeTitle,safeTitle],[body,body,body],TMP.slice(),[]]);
+  TMP=[];saveLetters();modal();render();
+}
+
+async function rec(b){
+  try{
+    if(MR&&MR.state=='recording'){MR.stop();b.textContent='🎙️ '+t('reRecord');return}
+    const s=await navigator.mediaDevices.getUserMedia({audio:true});
+    MR=new MediaRecorder(s);const ch=[];
+    MR.ondataavailable=e=>ch.push(e.data);
+    MR.onstop=()=>{AU=URL.createObjectURL(new Blob(ch));s.getTracks().forEach(k=>k.stop());document.getElementById('au').innerHTML=`<audio controls src="${AU}"></audio>`};
+    MR.start();b.textContent='⏹ '+t('stop')
+  }catch(e){document.getElementById('au').textContent=t('micUnavailable')}
+}
+function capM(){
+  AU=null;
+  modal(`<h2>⏳ ${t('capsule_h')}</h2><p class="note">${t('preTrip')}</p><label>${t('city')}<select id="cp">${[['city_sz',t('city_sz')],['city_yz',t('city_yz')],['city_nj',t('city_nj')]].map(c=>`<option value="${c[1]}">${c[1]}</option>`).join('')}</select></label><label>${t('openOn')}<input id="cd" type="date" min="${new Date().toISOString().slice(0,10)}"></label><label>${t('writeNote')}<textarea id="cn" rows="3"></textarea></label><button class="btn alt" onclick="rec(this)">🎙️ ${t('record')}</button><div id="au" class="note"></div><br><button class="btn" onclick="capS()">${t('seal')}</button>`)
+}
+function capS(){
+  if(!cd.value)return cd.focus();
+  const id=Date.now();
+  if(AU)AUDS[id]=AU;
+  (U().caps=U().caps||[]).push({id,place:cp.value,date:cd.value,note:cn.value});
+  save();modal();render()
+}
+function openC(id){
+  const c=U().caps.find(x=>x.id==id);
+  modal(`<h2>🔓 ${esc(c.place)}</h2>${bannerImg(IMG.capsule,art(0,'width:100%;height:100%;display:block'))}<div class="paper">${esc(c.note||t('noNote'))}</div>${AUDS[id]?`<audio controls src="${AUDS[id]}"></audio>`:'<p class="note">'+t('audioNote')+'</p>'}${closeB()}`)
+}
+function tgTheme(){
+  const d=document.documentElement;
+  if(d.getAttribute('data-theme')==='dark'){d.removeAttribute('data-theme')}else{d.setAttribute('data-theme','dark')}
+  try{localStorage.setItem('cl-theme',d.getAttribute('data-theme')||'')}catch(e){}
+}
+try{const th=localStorage.getItem('cl-theme');if(th)document.documentElement.setAttribute('data-theme',th)}catch(e){}
+
+function render(){
+  const r=route();
+  if(r==='tree'){location.replace('culture-tree.html');return;}
+  const prot=['passport','explore','companions','rewards','settings','more','dna','sim','forum'];
+  if(prot.includes(r)&&!U())return go('login');
+  header();
+  const A=document.getElementById('app');
+  A.innerHTML=r=='signup'?auth(1):r=='login'?auth(0):prot.includes(r)?({passport:passportBook,explore,companions,rewards,settings:settingsWithLogo,more:pgMore,dna:pgDna,sim:pgSim,tree:pgTree,forum:pgForum})[r]():landing();
+  document.documentElement.lang=LG[S.locale]
+}
+addEventListener('hashchange',()=>{modal();render()});
+render();
+</script>
+<script id="x-ext-script">
+/* ============================================================
+   CULTURELINK — PROFESSIONAL EXTENSIONS (additive only)
+   Wraps landing() and render() so every original route, feature
+   and data structure behaves exactly as before.
+   ============================================================ */
+(function(){
+'use strict';
+const L=(a,b,c)=>[a,b,c][S.locale]||a;
+const PUBLIC=['about','faq','contact','privacy'];
+const hd=()=>document.getElementById('hd'),ft=()=>document.getElementById('ft');
+
+/* ---------- shared content ---------- */
+const faqItems=()=>[
+ [L('What is CultureLink?','CultureLink 是甚麼？','CultureLink 是什么？'),
+  L('A playful travel journal for visitors from Hong Kong and Macau exploring Jiangsu. You collect stamps at cultural landmarks, learn the story behind each place and find companions to travel with. Our launch city is Suzhou.',
+    '這是為探索江蘇的香港及澳門旅客而設的遊戲式旅遊日誌。你可在文化地標收集印章、了解每個地方背後的故事，並尋找旅伴同行。首發城市為蘇州。',
+    '这是为探索江苏的香港及澳门旅客而设的游戏式旅游日志。你可在文化地标收集印章、了解每个地方背后的故事，并寻找旅伴同行。首发城市为苏州。')],
+ [L('How do stamps and points work?','印章及積分如何運作？','印章及积分如何运作？'),
+  L('Checking in at a landmark with a live photo earns its stamp and 10 points. Each landmark quiz has five questions worth 20 points per correct answer, and a perfect score upgrades the stamp to gold with a 50-point bonus.',
+    '以即時相片在地標打卡，即可獲得該地標印章及 10 積分。每個地標測驗共五題，答對一題得 20 積分；全部答對可將印章升級為金印章，並額外獲得 50 積分。',
+    '以实时照片在地标打卡，即可获得该地标印章及 10 积分。每个地标测验共五题，答对一题得 20 积分；全部答对可将印章升级为金印章，并额外获得 50 积分。')],
+ [L('Do I need an account?','我需要帳戶嗎？','我需要账户吗？'),
+  L('The Culture Tree and the information pages are open to everyone. The passport, stamps, rewards and companion board require an account.',
+    '文化樹及資訊頁面開放給所有人瀏覽。護照、印章、獎勵及旅伴板則需要帳戶。',
+    '文化树及资讯页面开放给所有人浏览。护照、印章、奖励及旅伴板则需要账户。')],
+ [L('Are the rewards real?','獎勵是真的嗎？','奖励是真的吗？'),
+  L('Rewards in this prototype are demonstrations. Redemption codes are examples only and cannot be used at real venues.',
+    '此原型中的獎勵僅作示範，兌換碼只是範例，不能在實際場所使用。',
+    '此原型中的奖励仅作示范，兑换码只是范例，不能在实际场所使用。')],
+ [L('Where is my data stored?','我的資料存放在哪裡？','我的资料存放在哪里？'),
+  L('In this prototype your profile, stamps, points and settings are stored only in your own browser on this device. Clearing your browser data removes them. See the Privacy & Terms page for details.',
+    '在此原型中，你的個人資料、印章、積分及設定只儲存在這部裝置的瀏覽器內。清除瀏覽器資料會一併移除。詳情請參閱「私隱及條款」頁面。',
+    '在此原型中，你的个人资料、印章、积分及设置只存储在这台设备的浏览器内。清除浏览器数据会一并移除。详情请参阅“隐私及条款”页面。')],
+ [L('Is the passport an official document?','護照是官方文件嗎？','护照是官方文件吗？'),
+  L('No. It is a collectible travel journal and is not an official or government document.',
+    '不是。它是可收藏的旅遊日誌，並非官方或政府文件。',
+    '不是。它是可收藏的旅游日志，并非官方或政府文件。')],
+ [L('Which languages are supported?','支援哪些語言？','支持哪些语言？'),
+  L('English, Traditional Chinese and Simplified Chinese. Use the language menu in the top bar to switch at any time.',
+    '支援英文、繁體中文及簡體中文。你可隨時使用頂部列的語言選單切換。',
+    '支持英文、繁体中文及简体中文。你可随时使用顶部栏的语言菜单切换。')]
+];
+const faqHTML=(n)=>`<div class="x-faq">${faqItems().slice(0,n||99).map(q=>`<details><summary>${esc(q[0])}</summary><p>${esc(q[1])}</p></details>`).join('')}</div>`;
+const sec=(eyebrow,title,lead,body)=>`<section class="x-sec x-rv">${eyebrow?`<span class="x-eyebrow">${eyebrow}</span>`:''}<h2>${title}</h2>${lead?`<p class="x-lead">${lead}</p>`:''}${body}</section>`;
+const phead=(h,p)=>`<section class="x-ph x-rv"><h1>${h}</h1><p>${p}</p></section>`;
+
+/* ---------- landing additions (logged-out home) ---------- */
+const baseLanding=landing;
+landing=function(){
+  const stats=[
+    [LOC.length,L('Landmarks to collect','可收集地標','可收集地标')],
+    [Object.keys(QZ).length,L('Quiz challenges','挑戰問答','挑战问答')],
+    [TRIPS.length+HOTELS.length+FOOD.length,L('Trips, stays & eats','行程、住宿及美食','行程、住宿及美食')],
+    [3,L('Languages','語言版本','语言版本')]
+  ];
+  const steps=[
+    ['🛂',L('Create your passport','建立你的護照','创建你的护照'),
+      L('Sign up in seconds and receive a digital passport that records every place you visit.','快速註冊，即獲一本數碼護照，記錄你到訪的每個地方。','快速注册，即获一本数码护照，记录你到访的每个地方。')],
+    [ '📸',L('Check in & learn','打卡並學習','打卡并学习'),
+      L('Visit a landmark, snap a live photo to collect its stamp, then discover the story behind it.','到訪地標，拍下即時相片收集印章，並了解背後的故事。','到访地标，拍下实时照片收集印章，并了解背后的故事。')],
+    [ '🏅',L('Earn rewards','賺取獎勵','赚取奖励'),
+      L('Take quizzes for points, master stamps in gold and unlock travel rewards as you go.','答問答賺積分，精通金印章，沿途解鎖旅遊獎勵。','答问答赚积分，精通金印章，沿途解锁旅游奖励。')]
+  ];
+  const why=[
+    ['📖',L('Stories, not just sights','不只是景點，更是故事','不只是景点，更是故事'),
+      L('Every landmark comes with context, so you understand what you are looking at.','每個地標都附背景故事，讓你真正明白眼前所見。','每个地标都附背景故事，让你真正明白眼前所见。')],
+    ['🎮',L('Travel that feels like play','玩味十足的旅程','玩味十足的旅程'),
+      L('Stamps, points and tiers turn sightseeing into a game the whole family can enjoy.','印章、積分及等級，把觀光變成全家同樂的遊戲。','印章、积分及等级，把观光变成全家同乐的游戏。')],
+    ['🤝',L('Find companions','尋找旅伴','寻找旅伴'),
+      L('Post your plans on the companion board and meet travellers heading the same way.','在旅伴板發佈行程，結識同路的旅客。','在旅伴板发布行程，结识同路的旅客。')],
+    ['🌏',L('Made for Hong Kong & Macau','專為港澳旅客而設','专为港澳旅客而设'),
+      L('Available in English, Traditional and Simplified Chinese.','提供英文、繁體及簡體中文。','提供英文、繁体及简体中文。')]
+  ];
+  const bg=(typeof IMG!=='undefined'&&IMG.tree)?`style="background-image:url('${IMG.tree}')"`:'';
+  return baseLanding()+
+   `<section class="x-sec x-rv"><div class="x-stats">${stats.map(s=>`<div class="x-stat"><b>${s[0]}</b><span>${s[1]}</span></div>`).join('')}</div></section>`+
+   sec(L('How it works','運作方式','运作方式'),L('Three steps to your first stamp','三步獲得第一枚印章','三步获得第一枚印章'),'',
+     `<div class="x-steps">${steps.map(s=>`<div class="card x-step"><div class="x-ic">${s[0]}</div><h3>${s[1]}</h3><p>${s[2]}</p></div>`).join('')}</div>`)+
+   sec(L('Why CultureLink','為何選擇 CultureLink','为何选择 CultureLink'),L('Culture, made memorable','讓文化更難忘','让文化更难忘'),'',
+     `<div class="grid">${why.map(w=>`<div class="card"><div class="x-ic">${w[0]}</div><h3>${w[1]}</h3><p>${w[2]}</p></div>`).join('')}</div>`)+
+   `<section class="x-sec x-rv"><div class="x-band" ${bg}><h2>${L('Explore the Culture Tree','探索文化樹','探索文化树')}</h2>
+     <p>${L('Follow the cultural roots of Nanjing, Suzhou, Wuxi and Yangzhou through gardens, canals, opera and local food. Open to everyone, no account needed.',
+            '循著南京、蘇州、無錫及揚州的文化根源，走訪園林、運河、戲曲及地道美食。人人可看，毋須註冊。',
+            '循着南京、苏州、无锡及扬州的文化根源，走访园林、运河、戏曲及地道美食。人人可看，无需注册。')}</p>
+     <div class="row"><a class="btn gold" href="culture-tree.html">${L('Open Culture Tree','開啟文化樹','打开文化树')}</a><a class="btn ghost" href="#about">${L('About CultureLink','關於 CultureLink','关于 CultureLink')}</a></div></div></section>`+
+   sec(L('FAQ','常見問題','常见问题'),L('Good to know','你可能想知道','你可能想知道'),'',
+     `<div class="x-narrow">${faqHTML(4)}<p style="text-align:center;margin-top:18px"><a class="btn alt" href="#faq">${L('View all questions','查看全部問題','查看全部问题')}</a></p></div>`)+
+   `<section class="x-sec x-rv" style="text-align:center"><h2>${L('Ready to start your journey?','準備好展開旅程了嗎？','准备好开启旅程了吗？')}</h2>
+     <p class="x-lead">${L('Create your passport and collect your first stamp in Suzhou.','建立護照，在蘇州收集第一枚印章。','创建护照，在苏州收集第一枚印章。')}</p>
+     <div class="row" style="justify-content:center"><button class="btn ver" onclick="go('signup')">${t('create')}</button><button class="btn alt" onclick="go('login')">${t('signin')}</button></div></section>`;
+};
+
+/* ---------- new public pages ---------- */
+const PAGES={
+ about:()=>phead(L('About CultureLink','關於 CultureLink','关于 CultureLink'),
+   L('A playful travel journal that helps visitors from Hong Kong and Macau discover the culture of Jiangsu, one stamp at a time.',
+     '一本遊戲式旅遊日誌，協助香港及澳門旅客逐個印章認識江蘇文化。',
+     '一本游戏式旅游日志，协助香港及澳门旅客逐个印章认识江苏文化。'))+
+  `<div class="x-narrow">`+
+  sec('',L('Our mission','我們的使命','我们的使命'),'',
+    `<p style="text-align:center">${L('CultureLink turns cultural travel into something memorable and shared. Instead of ticking off sights, visitors collect stamps, learn the stories behind each place and travel alongside others who share their interests.',
+      'CultureLink 讓文化旅遊變得難忘而且可以與人分享。旅客不只是到此一遊，而是收集印章、了解每個地方背後的故事，並與志同道合的人同行。',
+      'CultureLink 让文化旅游变得难忘而且可以与人分享。旅客不只是到此一游，而是收集印章、了解每个地方背后的故事，并与志同道合的人同行。')}</p>`)+
+  `</div>`+
+  sec(L('What we value','我們重視','我们重视'),L('Principles','理念','理念'),'',
+    `<div class="grid">${[
+      ['🏯',L('Respect for local culture','尊重在地文化','尊重在地文化'),L('Stories are told with context and care, so places are understood rather than treated as backdrops.','以背景與用心講述故事，讓旅客真正理解每個地方，而非只視作背景。','以背景与用心讲述故事，让旅客真正理解每个地方，而非只视作背景。')],
+      ['🌐',L('Accessible to everyone','人人皆可使用','人人皆可使用'),L('English, Traditional Chinese and Simplified Chinese are supported across the experience.','整個體驗均支援英文、繁體中文及簡體中文。','整个体验均支持英文、繁体中文及简体中文。')],
+      ['🔒',L('Privacy by design','以私隱為本','以隐私为本'),L('This prototype keeps your information in your own browser and does not send it to a server.','此原型將你的資料保存在自己的瀏覽器內，不會傳送至伺服器。','此原型将你的资料保存在自己的浏览器内，不会传送至服务器。')]
+    ].map(c=>`<div class="card"><div class="x-ic">${c[0]}</div><h3>${c[1]}</h3><p>${c[2]}</p></div>`).join('')}</div>`)+
+  sec(L('Where we are','目前進度','目前进度'),L('Launch city: Suzhou','首發城市：蘇州','首发城市：苏州'),
+    L('Landmarks and quizzes start in Suzhou, while the Culture Tree already covers four Jiangsu cities.','地標及測驗由蘇州開始，文化樹已涵蓋四個江蘇城市。','地标及测验由苏州开始，文化树已涵盖四个江苏城市。'),
+    `<div class="row" style="justify-content:center"><a class="btn" href="culture-tree.html">${L('Open Culture Tree','開啟文化樹','打开文化树')}</a><a class="btn alt" href="#contact">${L('Contact us','聯絡我們','联络我们')}</a></div>
+     <p class="note" style="text-align:center;margin-top:16px">${t('proto')}</p>`),
+ faq:()=>phead(L('Frequently asked questions','常見問題','常见问题'),L('Quick answers about stamps, points, rewards and your data.','關於印章、積分、獎勵及資料的簡單解答。','关于印章、积分、奖励及资料的简单解答。'))+
+  `<section class="x-sec x-rv x-narrow" style="margin-top:28px">${faqHTML()}
+   <p style="text-align:center;margin-top:22px;color:var(--mut)">${L('Still have a question?','仍有疑問？','仍有疑问？')} <a href="#contact" style="color:var(--jade);font-weight:600">${L('Contact us','聯絡我們','联络我们')}</a></p></section>`,
+ contact:()=>phead(L('Contact us','聯絡我們','联络我们'),L('Questions, partnership ideas or feedback? Send us a note.','有疑問、合作構想或意見？歡迎來信。','有疑问、合作构想或意见？欢迎来信。'))+
+  `<section class="x-sec x-rv x-two" style="margin-top:28px">
+    <form class="card" onsubmit="xSend(event)" novalidate>
+      <label>${t('name')}<input id="xc-n" autocomplete="name" required></label>
+      <label>${t('email')}<input id="xc-e" type="email" autocomplete="email" required></label>
+      <label>${L('Topic','主題','主题')}<select id="xc-t"><option>${L('General question','一般查詢','一般查询')}</option><option>${L('Partnership or venue enquiry','合作或場地查詢','合作或场地查询')}</option><option>${L('Feedback','意見回饋','意见反馈')}</option><option>${L('Report an issue','回報問題','反馈问题')}</option></select></label>
+      <label>${t('message')}<textarea id="xc-m" rows="5" required></textarea></label>
+      <button class="btn" type="submit">${L('Send message','傳送訊息','发送消息')}</button>
+      <p class="x-ok" id="xc-ok" role="status"></p>
+      <p class="note">${L('Prototype: messages are not sent anywhere.','原型：訊息不會被傳送。','原型：消息不会被发送。')}</p>
+    </form>
+    <div class="card"><h3>${L('How we can help','我們可以協助','我们可以协助')}</h3>
+      <ul class="x-list"><li>${L('Questions about the app','有關應用程式的疑問','有关应用程序的疑问')}</li><li>${L('Partnerships and venue enquiries','合作及場地查詢','合作及场地查询')}</li><li>${L('Feedback and suggestions','意見及建議','意见及建议')}</li><li>${L('Reporting content or an issue','舉報內容或問題','举报内容或问题')}</li></ul>
+      <p class="note" style="margin-top:14px">${L('You may also find quick answers on the','你亦可在','你亦可在')} <a href="#faq" style="color:var(--jade);font-weight:600">FAQ</a>${L(' page.',' 頁面找到簡單解答。',' 页面找到简单解答。')}</p></div>
+  </section>`,
+ privacy:()=>phead(L('Privacy & Terms','私隱及條款','隐私及条款'),L('How this prototype handles your information.','此原型如何處理你的資料。','此原型如何处理你的资料。'))+
+  `<section class="x-sec x-rv x-narrow x-legal" style="margin-top:28px"><div class="card">
+    <h3 style="margin-top:0">${L('Prototype notice','原型聲明','原型声明')}</h3>
+    <p>${L('CultureLink is a prototype. Sign-in is not real authentication, rewards are demonstrations, and the passport is a collectible journal rather than an official document.','CultureLink 為原型。登入並非真實驗證，獎勵僅作示範，護照為可收藏日誌而非官方文件。','CultureLink 为原型。登录并非真实验证，奖励仅作示范，护照为可收藏日志而非官方文件。')}</p>
+    <h3>${L('What is stored','儲存的內容','存储的内容')}</h3>
+    <p>${L('Your name, email, home city, travel style, stamps, points, saved trips, posts and preferences are saved in your browser’s local storage on this device. This prototype makes no network requests, so nothing is sent to a server.','你的姓名、電郵、居住城市、旅遊方式、印章、積分、已儲存行程、貼文及偏好設定，均儲存在這部裝置瀏覽器的本機儲存空間。此原型不會發出任何網絡請求，因此不會傳送任何資料至伺服器。','你的姓名、电邮、居住城市、旅游方式、印章、积分、已保存行程、帖子及偏好设置，均存储在这台设备浏览器的本地存储空间。此原型不会发出任何网络请求，因此不会传送任何资料至服务器。')}</p>
+    <h3>${L('Microphone','麥克風','麦克风')}</h3>
+    <p>${L('The microphone is used only if you choose to record a voice message, and your browser will ask for permission first.','只有在你選擇錄製語音訊息時才會使用麥克風，瀏覽器會先請求你的許可。','只有在你选择录制语音消息时才会使用麦克风，浏览器会先请求你的许可。')}</p>
+    <h3>${L('Your control','你的控制權','你的控制权')}</h3>
+    <p>${L('Clearing your browser’s site data for this page removes everything the prototype has saved.','清除此頁面的瀏覽器網站資料，即可移除原型保存的所有內容。','清除此页面的浏览器网站数据，即可移除原型保存的所有内容。')}</p>
+    <h3>${L('Using the prototype','使用原型','使用原型')}</h3>
+    <p>${L('Please respect local rules and other visitors when using the companion board. Content and venue details shown are for demonstration and may not reflect current opening hours or prices.','使用旅伴板時，請尊重當地規定及其他旅客。所示內容及場地資料僅供示範，可能與現時開放時間或價格不符。','使用旅伴板时，请尊重当地规定及其他旅客。所示内容及场地资料仅供示范，可能与现时开放时间或价格不符。')}</p>
+  </div></section>`
+};
+const TITLES={about:['About','關於','关于'],faq:['FAQ','常見問題','常见问题'],contact:['Contact','聯絡我們','联络我们'],privacy:['Privacy & Terms','私隱及條款','隐私及条款']};
+
+window.xSend=function(e){
+  e.preventDefault();
+  const n=document.getElementById('xc-n'),m=document.getElementById('xc-m'),em=document.getElementById('xc-e'),ok=document.getElementById('xc-ok');
+  const valid=n.value.trim()&&/^\S+@\S+\.\S+$/.test(em.value.trim())&&m.value.trim();
+  ok.style.display='block';
+  if(!valid){ok.style.color='var(--ver)';ok.textContent=L('Please complete your name, a valid email and a message.','請填寫姓名、有效電郵及訊息。','请填写姓名、有效电邮及消息。');return}
+  ok.style.color='#1b8a4b';
+  ok.textContent=L('Thank you! This is a prototype, so your message was not actually sent.','多謝你！此為原型，訊息並未實際傳送。','谢谢你！此为原型，消息并未实际发送。');
+  e.target.reset();
+};
+
+/* ---------- footer, public nav, extras ---------- */
+function richFooter(orig){
+  const u=U();
+  const lk=(h,tx)=>`<a href="${h}">${tx}</a>`;
+  return `<div class="x-ft">
+    <div><div class="x-brand">${logo(30)}<span>CultureLink</span></div><p>${L('A playful travel journal for Hong Kong and Macau visitors exploring Jiangsu.','為探索江蘇的香港及澳門旅客而設的遊戲式旅遊日誌。','为探索江苏的香港及澳门旅客而设的游戏式旅游日志。')}</p></div>
+    <div><h4>${L('Explore','探索','探索')}</h4>${lk('culture-tree.html',L('Culture Tree','文化樹','文化树'))}${u?lk('#passport',t('passport'))+lk('#explore',t('explore')):lk('#login',t('signin'))+lk('#signup',t('create'))}</div>
+    <div><h4>${L('Company','關於我們','关于我们')}</h4>${lk('#about',L('About','關於','关于'))}${lk('#faq',L('FAQ','常見問題','常见问题'))}${lk('#contact',L('Contact','聯絡我們','联络我们'))}</div>
+    <div><h4>${L('Legal','法律','法律')}</h4>${lk('#privacy',L('Privacy & Terms','私隱及條款','隐私及条款'))}</div>
+  </div><div>${orig}</div>`;
+}
+function publicNav(r){
+  if(U())return;
+  const sp=document.querySelector('#hd .sp');
+  if(!sp)return;
+  sp.outerHTML=`<nav class="top x-pub" aria-label="Site">${PUBLIC.filter(k=>k!=='privacy').map(k=>`<a href="#${k}" class="${r===k?'on':''}">${TITLES[k][S.locale]}</a>`).join('')}<a href="culture-tree.html">${L('Culture Tree','文化樹','文化树')}</a></nav>`;
+}
+let io=null;
+function reveal(){
+  const els=document.querySelectorAll('.x-rv:not(.in)');
+  if(!('IntersectionObserver' in window)){els.forEach(e=>e.classList.add('in'));return}
+  if(!io)io=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target)}}),{threshold:.08});
+  els.forEach(e=>io.observe(e));
+}
+
+/* ---------- render wrapper ---------- */
+const baseRender=render;let lastR=null;
+render=function(){
+  const r=route(),isNew=PUBLIC.includes(r);
+  if(isNew){
+    header();
+    document.getElementById('app').innerHTML=PAGES[r]();
+    document.documentElement.lang=LG[S.locale];
+    document.title=TITLES[r][S.locale]+' | CultureLink';
+  }else{
+    baseRender();
+    document.title='CultureLink';
+    if(r==='tree')return;
+  }
+  publicNav(r);
+  const f=ft();if(f&&!f.querySelector('.x-ft'))f.innerHTML=richFooter(f.innerHTML);
+  if(r!==lastR&&(isNew||PUBLIC.includes(lastR)))window.scrollTo(0,0);
+  lastR=r;
+  reveal();
+};
+
+/* ---------- back to top ---------- */
+const topBtn=document.createElement('button');
+topBtn.className='x-top';topBtn.type='button';topBtn.textContent='↑';
+topBtn.setAttribute('aria-label','Back to top');
+topBtn.onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
+document.body.appendChild(topBtn);
+addEventListener('scroll',()=>topBtn.classList.toggle('show',window.scrollY>700),{passive:true});
+
+render();
+})();
+</script>
+<script src="eguide.js" defer></script>
+</body>
+</html>
